@@ -29,3 +29,4 @@ public class JavaGame extends ApplicationAdapter {
 		img.dispose();
 	}
 }
+
