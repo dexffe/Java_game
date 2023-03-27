@@ -1,8 +1,11 @@
 package com.mygdx.game;
 
+<<<<<<< HEAD
 
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
+=======
+>>>>>>> origin/master
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -12,6 +15,7 @@ import com.badlogic.gdx.physics.box2d.World;
 public class Wall {
     Body body;
 
+<<<<<<< HEAD
     Wall(World world, OrthographicCamera camera, float x, float y, float heght, float widht) {
         // Create our body definition
         BodyDef bodyDef = new BodyDef();
@@ -33,3 +37,18 @@ public class Wall {
         box.dispose();
     }
 }
+=======
+    Wall(World world, float x, float y, float width, float height){
+        // Create our body definition
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.StaticBody;
+        bodyDef.position.set(new Vector2(x, y));
+        body = world.createBody(bodyDef);
+        PolygonShape Box = new PolygonShape();
+        Box.setAsBox(width, height); // первый аргумент длинна, второй высота
+        body.createFixture(Box, 0.0f);
+        Box.dispose();
+    }
+
+}
+>>>>>>> origin/master
