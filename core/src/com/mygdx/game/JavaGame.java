@@ -19,6 +19,7 @@ public class JavaGame extends ApplicationAdapter {
 
 	Wall floor;
 	Ball ball;
+	Static_triangle triangle;
 	
 	@Override
 	public void create () {
@@ -32,6 +33,8 @@ public class JavaGame extends ApplicationAdapter {
 		floor = new Wall(world, 8, 1, 16, 0.5f);
 		floor = new Wall(world, 1, 4.5f, 0.5f, 9);
 		floor = new Wall(world, 15, 4.5f, 0.5f, 9);
+
+		triangle = new Static_triangle(world, 8, 1.5f, new float[] {0.5f, 2f, 1f, 0f, 0f, 0f});
 
 		ball = new Ball(world, 8, 8, 0.5f);
 		ball = new Ball(world, 7, 8, 0.7f);
