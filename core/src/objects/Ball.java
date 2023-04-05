@@ -1,4 +1,4 @@
-package com.mygdx.game;
+package objects;
 
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
@@ -10,7 +10,7 @@ import com.badlogic.gdx.physics.box2d.World;
 
 public class Ball {
     Body body;
-    Ball(World world, float x, float y, float radius){
+    public Ball(World world, float x, float y, float radius){
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         bodyDef.position.set(x, y);

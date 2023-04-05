@@ -1,4 +1,4 @@
-package com.mygdx.game;
+package objects;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -15,13 +15,13 @@ public class Gear {
 
     // 4 зубца
     Body box;
-    Body toptooth;
-    Body righttooth;
-    Body bottooth;
-    Body lefttooth;
-    int PPM = 0;
+    Body topTooth;
+    Body rightTooth;
+    Body botTooth;
+    Body leftTooth;
+    int PPM;
 
-    Gear(World world, float rotation, float x, float y, boolean n, float resize, int speed, int hf, int _PPM){
+    public Gear(World world, float rotation, float x, float y, boolean n, float resize, int speed, int hf, int _PPM){
         PPM = _PPM;
         x = x / 2f;
         y = y / 2f;
@@ -30,22 +30,22 @@ public class Gear {
 
         box.setTransform(box.getPosition().x, box.getPosition().y, rotation);
 
-        toptooth = createTopTooth(world, x, y, x, y, resize);
-        toptooth.setTransform(x, y, rotation);
+        topTooth = createTopTooth(world, x, y, x, y, resize);
+        topTooth.setTransform(x, y, rotation);
 
-        righttooth = createRightTooth(world, x, y, x, y, resize);
-        righttooth.setTransform(x, y, rotation);
+        rightTooth = createRightTooth(world, x, y, x, y, resize);
+        rightTooth.setTransform(x, y, rotation);
 
-        bottooth = createBotTooth(world, x, y, x, y, resize);
-        bottooth.setTransform(x, y, rotation);
+        botTooth = createBotTooth(world, x, y, x, y, resize);
+        botTooth.setTransform(x, y, rotation);
 
-        lefttooth = createLeftTooth(world, x, y, x, y, resize);
-        lefttooth.setTransform(x, y, rotation);
+        leftTooth = createLeftTooth(world, x, y, x, y, resize);
+        leftTooth.setTransform(x, y, rotation);
 
-        weldMotJoint(world, box, toptooth);
-        weldMotJoint(world, box, righttooth);
-        weldMotJoint(world, box, bottooth);
-        weldMotJoint(world, box, lefttooth);
+        weldMotJoint(world, box, topTooth);
+        weldMotJoint(world, box, rightTooth);
+        weldMotJoint(world, box, botTooth);
+        weldMotJoint(world, box, leftTooth);
 
         revJoint(world, basis, box, n, speed, hf);
     }

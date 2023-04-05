@@ -1,4 +1,4 @@
-package com.mygdx.game;
+package objects;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -7,10 +7,10 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
-public class Static_triangle {
+public class StaticTriangle {
     Body body;
 
-    Static_triangle(World world, float x, float y, float[] vertices){
+    public StaticTriangle(World world, float x, float y, float[] vertices){
         // Create our body definition
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.StaticBody;
