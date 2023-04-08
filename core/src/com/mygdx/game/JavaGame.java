@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 
@@ -33,6 +34,7 @@ public class JavaGame extends Game {
 
 	WorldIntro worldIntro;
 	WorldGame worldGame;
+	WorldLevel worldLevel;
 	WorldSettings worldSettings;
 
 
@@ -46,8 +48,10 @@ public class JavaGame extends Game {
 		debugRenderer = new Box2DDebugRenderer();
 
 		worldIntro = new WorldIntro(this);
-		//screenGame = new WorldGame(this);
-		//screenSettings = new WorldSettings(this);
+		worldLevel = new WorldLevel(this);
+		worldGame = new WorldGame(this);
+		worldSettings = new WorldSettings(this);
+
 		setScreen(worldIntro);
 
 		//swing = new Swing(world, 5, 5);

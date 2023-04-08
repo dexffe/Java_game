@@ -12,7 +12,9 @@ import javax.swing.JLayeredPane;
 
 public class Ball {
     public Body body;
+    public float r;
     public Ball(World world, float x, float y, float radius){
+        r = radius;
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         bodyDef.position.set(x, y);
@@ -31,5 +33,10 @@ public class Ball {
         Fixture fixture = body.createFixture(fixtureDef);
 
         circle.dispose();
+    }
+
+    public boolean hit(float tx, float ty) {
+        return Math.pow(tx-body.getPosition().x,2) +
+                Math.pow(ty-body.getPosition().y,2) < r*r;
     }
 }
