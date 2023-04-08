@@ -31,6 +31,7 @@ public class JavaGame extends Game {
 	Ball ball;
 	Gear gear;
 	Swing swing;
+	boolean pause;
 
 	WorldIntro worldIntro;
 	WorldGame worldGame;

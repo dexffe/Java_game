@@ -38,7 +38,7 @@ public class WorldGame implements Screen {
 
     StaticTriangle triangle;
     Wall floor;
-    Ball ball;
+    Ball ball, ballPause;
     Gear gear;
     Swing swing;
 
@@ -54,7 +54,7 @@ public class WorldGame implements Screen {
     public void show() {
         world = new World(new Vector2(0, -10), false);
 
-        texture = new Texture(Gdx.files.internal("setings.png"));
+        texture = new Texture(Gdx.files.internal("pause.png"));
         touch = new Vector3();
 
         floor = new Wall(world, 8, 1, 16, 0.5f);
@@ -78,6 +78,8 @@ public class WorldGame implements Screen {
 
         gear = new Gear(world, 0f, 3, 3, true, 0.7f, 13, 35, 50);
         gear = new Gear(world, 0f, 13, 3, true, 0.7f, -13, 35 , 50);
+
+        ballPause = new Ball(world, 3, 8, 0.5f);
     }
 
     @Override
@@ -85,12 +87,12 @@ public class WorldGame implements Screen {
         if (Gdx.input.justTouched()) {
             touch.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             JG.camera.unproject(touch);
-            if (ball.hit(touch.x, touch.y)) {
-                JG.setScreen(JG.worldSettings);
+            if (ballPause.hit(touch.x, touch.y)) {
+                JG.pause = !JG.pause;
             }
         }
         ScreenUtils.clear(0,0,0,1);
-        world.step(1/60f,6,2);
+        if (!JG.pause)world.step(1/60f,6,2);
         //JG.camera.update();
         JG.debugRenderer.render(world,JG.camera.combined);
 
@@ -99,9 +101,9 @@ public class WorldGame implements Screen {
         JG.batch.setProjectionMatrix(JG.camera.combined);
         JG.batch.begin();
         JG.batch.draw(texture,
-                ball.body.getPosition().x-ball.r,
-                ball.body.getPosition().y-ball.r,
-                0,ball.r*2,ball.r*2,ball.r*2,
+                ballPause.body.getPosition().x-ballPause.r,
+                ballPause.body.getPosition().y-ballPause.r,
+                0,ballPause.r*2,ballPause.r*2,ballPause.r*2,
                 1,1,0,0,0,100,100,false,false);
         JG.batch.end();
     }
