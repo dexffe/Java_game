@@ -1,22 +1,29 @@
 package com.mygdx.game;
 
+import static com.mygdx.game.JavaGame.*;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 import objects.*;
+import objects.Ball.*;
 
 public class WorldIntro implements Screen {
     JavaGame JG;
-    Ball b;
 
     Texture texture;
+    Box2DDebugRenderer debugRenderer;
+    OrthographicCamera camera;
     Sprite sprite;
     SpriteBatch batch;
     TextButton btnPlay, btnSettings, btnExit;
@@ -46,13 +53,13 @@ public class WorldIntro implements Screen {
         world = new World(new Vector2(0, -10), false);
 
         texture = new Texture(Gdx.files.internal("setings.png"));
-        sprite = new Sprite(texture);
 
         floor = new Wall(world, 8, 1, 16, 0.5f);
         floor = new Wall(world, 1, 4.5f, 0.5f, 9);
         floor = new Wall(world, 15, 4.5f, 0.5f, 9);
 
-        ball = new Ball(world, 12, 8, 0.5f);
+        ball = new Ball(world, 2, 8, 0.5f);
+        ball = new Ball(world, 10, 8, 0.5f);
     }
 
     @Override
@@ -62,13 +69,15 @@ public class WorldIntro implements Screen {
         JG.camera.update();
         JG.debugRenderer.render(world, JG.camera.combined);
 
-        // Связываем спрайт с нашим объектом Box2D
-        // sprite.setPosition(b.body.getPosition().x, b.body.getPosition().y); нужно для sprite но с ним не запускается
 
         // Отрисовываем спрайт
         JG.batch.setProjectionMatrix(JG.camera.combined);
         JG.batch.begin();
-        sprite.draw(JG.batch);
+        JG.batch.draw(texture,
+                ball.body.getPosition().x,
+                ball.body.getPosition().y,
+                -2, -2, w/2, h/2,
+                0.2f, 0.3f, 0f, 0, 0, 100, 100, false, false);
         JG.batch.end();
     }
 
@@ -94,6 +103,8 @@ public class WorldIntro implements Screen {
 
     @Override
     public void dispose() {
-
+        world.dispose();
+        debugRenderer.dispose();
+        batch.dispose();
     }
 }

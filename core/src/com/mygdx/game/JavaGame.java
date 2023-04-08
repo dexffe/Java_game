@@ -43,7 +43,6 @@ public class JavaGame extends Game {
 		batch = new SpriteBatch();
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, w, h);
-		world = new World(new Vector2(0, -10), false);
 		debugRenderer = new Box2DDebugRenderer();
 
 		worldIntro = new WorldIntro(this);

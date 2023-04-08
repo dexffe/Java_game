@@ -7,9 +7,11 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 
+import javax.swing.JLayeredPane;
+
 
 public class Ball {
-    Body body;
+    public Body body;
     public Ball(World world, float x, float y, float radius){
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
