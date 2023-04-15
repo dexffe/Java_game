@@ -13,11 +13,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-import objects.Ball;
-import objects.Gear;
-import objects.StaticTriangle;
-import objects.Swing;
-import objects.Wall;
+import objects.*;
 
 public class WorldLevel implements Screen {
     JavaGame JG;

@@ -6,18 +6,19 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.ChainShape;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-import objects.Ball;
-import objects.Gear;
-import objects.StaticTriangle;
-import objects.Swing;
-import objects.Wall;
+import objects.*;
 
 public class WorldSettings implements Screen {
     JavaGame JG;
@@ -31,16 +32,17 @@ public class WorldSettings implements Screen {
     TextButton btnPlay, btnSettings, btnExit;
 
     World world;
-    //SpriteBatch batch;
-    //Sprite sprite;
-    //OrthographicCamera camera;
-    //Box2DDebugRenderer debugRenderer;
 
     StaticTriangle triangle;
     Wall floor;
     Ball ball;
     Gear gear;
     Swing swing;
+
+    float radius = 2.0f;
+    int segments = 10;
+    ChainShape chain;
+    Vector2[] vertices;
 
     public WorldSettings(JavaGame context) {
         JG = context;
@@ -53,11 +55,40 @@ public class WorldSettings implements Screen {
         texture = new Texture(Gdx.files.internal("return.png"));
         touch = new Vector3();
 
-        floor = new Wall(world, 8, 1, 16, 0.5f);
-        floor = new Wall(world, 1, 4.5f, 0.5f, 9);
-        floor = new Wall(world, 15, 4.5f, 0.5f, 9);
+        floor = new Wall(world, 8, 0, 16, 0f);
+        floor = new Wall(world, 8, 9, 16, 0f);
+        floor = new Wall(world, 10, 8, 8, 0f);
+
+        floor = new Wall(world, 0, 4.5f, 0f, 9);
+        floor = new Wall(world, 1, 4f, 0f, 3);
+
+        floor = new Wall(world, 16, 4.5f, 0f, 9);
+
 
         ball = new Ball(world, 10, 8, 0.5f, true);
+
+
+        vertices = new Vector2[segments + 2];
+        vertices[0] = new Vector2(0, 0);
+        vertices[segments + 1] = new Vector2(0, 0);
+
+        for (int i = 0; i < segments; i++) {
+            float angle = i * 2 * MathUtils.PI / segments;
+            float x = radius * MathUtils.cos(angle);
+            float y = radius * MathUtils.sin(angle);
+            vertices[i + 1] = new Vector2(x, y);
+        }
+        chain = new ChainShape();
+        chain.createChain(vertices);
+
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.StaticBody;
+        bodyDef.position.x = 5;
+        bodyDef.position.y = 4;
+        Body body = world.createBody(bodyDef);
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = chain;
+        body.createFixture(fixtureDef);
     }
 
     @Override
@@ -111,5 +142,6 @@ public class WorldSettings implements Screen {
         world.dispose();
         debugRenderer.dispose();
         batch.dispose();
+        chain.dispose();
     }
 }
