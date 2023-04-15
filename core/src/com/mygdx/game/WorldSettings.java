@@ -1,10 +1,7 @@
 package com.mygdx.game;
 
-import static com.mygdx.game.JavaGame.*;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -16,8 +13,11 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-import objects.*;
-import objects.Ball.*;
+import objects.Ball;
+import objects.Gear;
+import objects.StaticTriangle;
+import objects.Swing;
+import objects.Wall;
 
 public class WorldSettings implements Screen {
     JavaGame JG;
@@ -44,10 +44,6 @@ public class WorldSettings implements Screen {
 
     public WorldSettings(JavaGame context) {
         JG = context;
-        //imgBG = new Texture("winter1.jpg"); // фон
-        //btnPlay = new TextButton(JG.fontLarge, "ИГРАТЬ", 600, 600);
-        //btnSettings = new TextButton(JG.fontLarge, "НАСТРОЙКИ", 600, 500);
-        //btnExit = new TextButton(JG.fontLarge, "ВЫХОД", 600, 400);
     }
 
     @Override
@@ -61,7 +57,7 @@ public class WorldSettings implements Screen {
         floor = new Wall(world, 1, 4.5f, 0.5f, 9);
         floor = new Wall(world, 15, 4.5f, 0.5f, 9);
 
-        ball = new Ball(world, 10, 8, 0.5f);
+        ball = new Ball(world, 10, 8, 0.5f, true);
     }
 
     @Override

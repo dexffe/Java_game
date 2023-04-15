@@ -27,23 +27,15 @@ public class WorldIntro implements Screen {
     TextButton btnPlay, btnSettings, btnExit;
 
     World world;
-    //SpriteBatch batch;
-    //Sprite sprite;
-    //OrthographicCamera camera;
-    //Box2DDebugRenderer debugRenderer;
 
     StaticTriangle triangle;
     Wall floor;
-    Ball ballSettings, ballLevel;
+    Ball buttonSettings, buttonLevel;
     Gear gear;
     Swing swing;
 
     public WorldIntro(JavaGame context) {
         JG = context;
-        //imgBG = new Texture("winter1.jpg"); // фон
-        //btnPlay = new TextButton(JG.fontLarge, "ИГРАТЬ", 600, 600);
-        //btnSettings = new TextButton(JG.fontLarge, "НАСТРОЙКИ", 600, 500);
-        //btnExit = new TextButton(JG.fontLarge, "ВЫХОД", 600, 400);
     }
 
     @Override
@@ -58,8 +50,8 @@ public class WorldIntro implements Screen {
         floor = new Wall(world, 1, 4.5f, 0.5f, 9);
         floor = new Wall(world, 15, 4.5f, 0.5f, 9);
 
-        ballSettings = new Ball(world, 10, 8, 0.5f);
-        ballLevel = new Ball(world, 3, 8, 0.5f);
+        buttonSettings = new Ball(world, 10, 8, 0.5f, true);
+        buttonLevel = new Ball(world, 3, 8, 0.5f, false);
     }
 
     @Override
@@ -67,10 +59,10 @@ public class WorldIntro implements Screen {
         if (Gdx.input.justTouched()) {
             touch.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             JG.camera.unproject(touch);
-            if (ballSettings.hit(touch.x, touch.y)) {
+            if (buttonSettings.hit(touch.x, touch.y)) {
                 JG.setScreen(JG.worldSettings);
             }
-            if (ballLevel.hit(touch.x, touch.y)) {
+            if (buttonLevel.hit(touch.x, touch.y)) {
                 JG.setScreen(JG.worldLevel);
             }
         }
@@ -84,14 +76,14 @@ public class WorldIntro implements Screen {
         JG.batch.setProjectionMatrix(JG.camera.combined);
         JG.batch.begin();
         JG.batch.draw(textureSettings,
-            ballSettings.body.getPosition().x- ballSettings.r,
-            ballSettings.body.getPosition().y- ballSettings.r,
-            0, ballSettings.r*2, ballSettings.r*2, ballSettings.r*2,
+            buttonSettings.body.getPosition().x- buttonSettings.r,
+            buttonSettings.body.getPosition().y- buttonSettings.r,
+            0, buttonSettings.r*2, buttonSettings.r*2, buttonSettings.r*2,
             1,1,0,0,0,100,100,false,false);
         JG.batch.draw(textureLevel,
-                ballLevel.body.getPosition().x- ballLevel.r,
-                ballLevel.body.getPosition().y- ballLevel.r,
-                0, ballLevel.r*2, ballLevel.r*2, ballLevel.r*2,
+                buttonLevel.body.getPosition().x- buttonLevel.r,
+                buttonLevel.body.getPosition().y- buttonLevel.r,
+                0, buttonLevel.r*2, buttonLevel.r*2, buttonLevel.r*2,
                 1,1,0,0,0,100,100,false,false);
         JG.batch.end();
     }
