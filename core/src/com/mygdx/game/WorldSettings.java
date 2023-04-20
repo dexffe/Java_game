@@ -6,19 +6,19 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.physics.box2d.Body;
-import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
-import com.badlogic.gdx.physics.box2d.ChainShape;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-import objects.*;
+import objects.Arc;
+import objects.Ball;
+import objects.Gear;
+import objects.StaticTriangle;
+import objects.Swing;
+import objects.Wall;
 
 public class WorldSettings implements Screen {
     JavaGame JG;
@@ -35,14 +35,11 @@ public class WorldSettings implements Screen {
 
     StaticTriangle triangle;
     Wall floor;
-    Ball ball;
+    Ball ballSettings, ball;
     Gear gear;
     Swing swing;
+    Arc arc;
 
-    float radius = 2.0f;
-    int segments = 10;
-    ChainShape chain;
-    Vector2[] vertices;
 
     public WorldSettings(JavaGame context) {
         JG = context;
@@ -65,30 +62,14 @@ public class WorldSettings implements Screen {
         floor = new Wall(world, 16, 4.5f, 0f, 9);
 
 
-        ball = new Ball(world, 10, 8, 0.5f, true);
+        ballSettings = new Ball(world, 10, 8, 0.5f, true);
+        ball = new Ball(world, 5, 3, 0.2f, true);
 
 
-        vertices = new Vector2[segments + 2];
-        vertices[0] = new Vector2(0, 0);
-        vertices[segments + 1] = new Vector2(0, 0);
+        arc = new Arc(world, 1.7f, 7.3f, 30, 1.7f, 3.2f, 0.7f);
+        arc = new Arc(world, 1f, 8f, 30, 1.7f, 3.2f, 1f);
 
-        for (int i = 0; i < segments; i++) {
-            float angle = i * 2 * MathUtils.PI / segments;
-            float x = radius * MathUtils.cos(angle);
-            float y = radius * MathUtils.sin(angle);
-            vertices[i + 1] = new Vector2(x, y);
-        }
-        chain = new ChainShape();
-        chain.createChain(vertices);
 
-        BodyDef bodyDef = new BodyDef();
-        bodyDef.type = BodyDef.BodyType.StaticBody;
-        bodyDef.position.x = 5;
-        bodyDef.position.y = 4;
-        Body body = world.createBody(bodyDef);
-        FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.shape = chain;
-        body.createFixture(fixtureDef);
     }
 
     @Override
@@ -96,7 +77,7 @@ public class WorldSettings implements Screen {
         if (Gdx.input.justTouched()) {
             touch.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             JG.camera.unproject(touch);
-            if (ball.hit(touch.x, touch.y)) {
+            if (ballSettings.hit(touch.x, touch.y)) {
                 JG.setScreen(JG.worldIntro);
             }
         }
@@ -110,9 +91,9 @@ public class WorldSettings implements Screen {
         JG.batch.setProjectionMatrix(JG.camera.combined);
         JG.batch.begin();
         JG.batch.draw(texture,
-                ball.body.getPosition().x-ball.r,
-                ball.body.getPosition().y-ball.r,
-                0,ball.r*2,ball.r*2,ball.r*2,
+                ballSettings.body.getPosition().x- ballSettings.r,
+                ballSettings.body.getPosition().y- ballSettings.r,
+                0, ballSettings.r*2, ballSettings.r*2, ballSettings.r*2,
                 1,1,0,0,0,100,100,false,false);
         JG.batch.end();
     }
@@ -142,6 +123,5 @@ public class WorldSettings implements Screen {
         world.dispose();
         debugRenderer.dispose();
         batch.dispose();
-        chain.dispose();
     }
 }
