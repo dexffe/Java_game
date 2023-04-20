@@ -1,4 +1,4 @@
-package com.mygdx.game;
+package com.mygdx.game.worlds;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -13,17 +13,14 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-import objects.Arc;
-import objects.Ball;
-import objects.Gear;
-import objects.StaticTriangle;
-import objects.Swing;
-import objects.Wall;
+import com.mygdx.game.JavaGame;
+import com.mygdx.game.objects.*;
 
-public class WorldSettings implements Screen {
+public class WorldGame implements Screen {
     JavaGame JG;
+    boolean pause;
 
-    Texture texture;
+    Texture texturePause;
     Box2DDebugRenderer debugRenderer;
     OrthographicCamera camera;
     Sprite sprite;
@@ -33,15 +30,13 @@ public class WorldSettings implements Screen {
 
     World world;
 
-    StaticTriangle triangle;
+    Triangle triangle;
     Wall floor;
-    Ball ballSettings, ball;
+    Ball ball, buttonPause;
     Gear gear;
     Swing swing;
-    Arc arc;
 
-
-    public WorldSettings(JavaGame context) {
+    public WorldGame(JavaGame context) {
         JG = context;
     }
 
@@ -49,27 +44,32 @@ public class WorldSettings implements Screen {
     public void show() {
         world = new World(new Vector2(0, -10), false);
 
-        texture = new Texture(Gdx.files.internal("return.png"));
+        texturePause = new Texture(Gdx.files.internal("pause.png"));
         touch = new Vector3();
 
-        floor = new Wall(world, 8, 0, 16, 0f);
-        floor = new Wall(world, 8, 9, 16, 0f);
-        floor = new Wall(world, 10, 8, 8, 0f);
+        floor = new Wall(world, 8, 1, 16, 0.5f);
+        floor = new Wall(world, 1, 4.5f, 0.5f, 9);
+        floor = new Wall(world, 15, 4.5f, 0.5f, 9);
 
-        floor = new Wall(world, 0, 4.5f, 0f, 9);
-        floor = new Wall(world, 1, 4f, 0f, 3);
+        ball = new Ball(world, 12, 8, 0.5f, true);
+        ball = new Ball(world, 11, 8, 0.5f, true);
+        ball = new Ball(world, 10, 8, 0.5f, true);
+        ball = new Ball(world, 9, 8, 0.5f, true);
+        ball = new Ball(world, 8, 8, 0.5f, true);
+        ball = new Ball(world, 7, 8, 0.5f, true);
+        ball = new Ball(world, 6, 8, 0.5f, true);
+        ball = new Ball(world, 5, 8, 0.5f, true);
+        ball = new Ball(world, 4, 8, 0.5f, true);
+        ball = new Ball(world, 3, 8, 0.5f, true);
 
-        floor = new Wall(world, 16, 4.5f, 0f, 9);
+        triangle = new Triangle(world, 7, 1.5f, new float[] {1f, 2, 2, 0, 0, 0});
+        triangle = new Triangle(world, 1.5f, 4.5f, new float[] {0f, 1, 1, 0, 0, 0});
+        triangle = new Triangle(world, 13f, 4.5f, new float[] {1, 1, 1, 0, 0, 0});
 
+        gear = new Gear(world, 0f, 3, 3, true, 0.7f, 13, 35, 50);
+        gear = new Gear(world, 0f, 13, 3, true, 0.7f, -13, 35 , 50);
 
-        ballSettings = new Ball(world, 10, 8, 0.5f, true);
-        ball = new Ball(world, 5, 3, 0.2f, true);
-
-
-        arc = new Arc(world, 1.7f, 7.3f, 30, 1.7f, 3.2f, 0.7f);
-        arc = new Arc(world, 1f, 8f, 30, 1.7f, 3.2f, 1f);
-
-
+        buttonPause = new Ball(world, 15.5f, 8.5f, 0.3f, false);
     }
 
     @Override
@@ -77,12 +77,12 @@ public class WorldSettings implements Screen {
         if (Gdx.input.justTouched()) {
             touch.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             JG.camera.unproject(touch);
-            if (ballSettings.hit(touch.x, touch.y)) {
-                JG.setScreen(JG.worldIntro);
+            if (buttonPause.hit(touch.x, touch.y)) {
+                pause();
             }
         }
         ScreenUtils.clear(0,0,0,1);
-        world.step(1/60f,6,2);
+        if (!pause)world.step(1/60f,6,2);
         //JG.camera.update();
         JG.debugRenderer.render(world,JG.camera.combined);
 
@@ -90,10 +90,10 @@ public class WorldSettings implements Screen {
         // Отрисовываем спрайт
         JG.batch.setProjectionMatrix(JG.camera.combined);
         JG.batch.begin();
-        JG.batch.draw(texture,
-                ballSettings.body.getPosition().x- ballSettings.r,
-                ballSettings.body.getPosition().y- ballSettings.r,
-                0, ballSettings.r*2, ballSettings.r*2, ballSettings.r*2,
+        JG.batch.draw(texturePause,
+                buttonPause.body.getPosition().x- buttonPause.r,
+                buttonPause.body.getPosition().y- buttonPause.r,
+                0, buttonPause.r*2, buttonPause.r*2, buttonPause.r*2,
                 1,1,0,0,0,100,100,false,false);
         JG.batch.end();
     }
@@ -105,7 +105,7 @@ public class WorldSettings implements Screen {
 
     @Override
     public void pause() {
-
+        pause = !pause;
     }
 
     @Override

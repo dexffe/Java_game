@@ -1,4 +1,4 @@
-package com.mygdx.game;
+package com.mygdx.game.worlds;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -12,8 +12,14 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.mygdx.game.JavaGame;
+import com.mygdx.game.objects.Arc;
+import com.mygdx.game.objects.Ball;
+import com.mygdx.game.objects.Gear;
+import com.mygdx.game.objects.Swing;
+import com.mygdx.game.objects.Triangle;
+import com.mygdx.game.objects.Wall;
 
-import objects.*;
 
 public class WorldLevel implements Screen {
     JavaGame JG;
@@ -28,11 +34,12 @@ public class WorldLevel implements Screen {
 
     World world;
 
-    StaticTriangle triangle;
+    Triangle triangle;
     Wall floor;
     Ball buttonIntro, buttonGame;
     Gear gear;
     Swing swing;
+    Arc arc;
 
     public WorldLevel(JavaGame context) {
         JG = context;
@@ -46,12 +53,23 @@ public class WorldLevel implements Screen {
         textureGame = new Texture(Gdx.files.internal("start.png"));
         touch = new Vector3();
 
-        floor = new Wall(world, 8, 1, 16, 0.5f);
-        floor = new Wall(world, 1, 4.5f, 0.5f, 9);
-        floor = new Wall(world, 15, 4.5f, 0.5f, 9);
+        floor = new Wall(world, 8, 0, 16, 0f);
+        floor = new Wall(world, 8, 9, 16, 0f);
+        floor = new Wall(world, 16, 4.5f, 0f, 9);
 
-        buttonIntro = new Ball(world, 10, 8, 0.5f, false);
-        buttonGame = new Ball(world, 2, 8, 0.5f, false);
+        buttonIntro = new Ball(world, 15, 1, 0.5f, false);
+        buttonGame = new Ball(world, 2, 3, 0.5f, false);
+
+        float h = 6f;
+        float count = 0;
+        for (int i = 0; i < 12; i++) {
+            gear = new Gear(world, 0, i, h, true, 0.3f, -3, 35 , 50);
+            if (h != 7f && count >= 4 && count <= 8) h += 0.2f;
+            count += 1;
+        }
+
+        arc = new Arc(world, 11f, 5f, 30, 0f, -1.5f, 5f);
+
     }
 
     @Override

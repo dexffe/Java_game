@@ -1,4 +1,4 @@
-package com.mygdx.game;
+package com.mygdx.game.worlds;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -12,13 +12,18 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.ScreenUtils;
-
-import objects.*;
+import com.mygdx.game.JavaGame;
+import com.mygdx.game.objects.Ball;
+import com.mygdx.game.objects.Box;
+import com.mygdx.game.objects.Gear;
+import com.mygdx.game.objects.Swing;
+import com.mygdx.game.objects.Triangle;
+import com.mygdx.game.objects.Wall;
 
 public class WorldIntro implements Screen {
     JavaGame JG;
 
-    Texture textureLevel, textureSettings;
+    Texture textureLevel, textureSettings, textureAbout;
     Box2DDebugRenderer debugRenderer;
     OrthographicCamera camera;
     Sprite sprite;
@@ -26,13 +31,15 @@ public class WorldIntro implements Screen {
     Vector3 touch;
     TextButton btnPlay, btnSettings, btnExit;
 
+    //Map<Texture, Ball> ListTextureBall = new HashMap<Texture, Ball>();
     World world;
 
-    StaticTriangle triangle;
+    Triangle triangle;
     Wall floor;
-    Ball buttonSettings, buttonLevel;
+    Ball buttonSettings, buttonLevel, buttonAbout;
     Gear gear;
     Swing swing;
+    Box box;
 
     public WorldIntro(JavaGame context) {
         JG = context;
@@ -42,16 +49,29 @@ public class WorldIntro implements Screen {
     public void show() {
         world = new World(new Vector2(0, -10), false);
 
-        textureSettings = new Texture(Gdx.files.internal("setings.png"));
-        textureLevel = new Texture(Gdx.files.internal("mapMenung.png"));
+        textureSettings = new Texture(Gdx.files.internal("settings.png"));
+        textureLevel = new Texture(Gdx.files.internal("start.png"));
+        textureAbout= new Texture(Gdx.files.internal("skelet.png"));
         touch = new Vector3();
 
-        floor = new Wall(world, 8, 1, 16, 0.5f);
-        floor = new Wall(world, 1, 4.5f, 0.5f, 9);
-        floor = new Wall(world, 15, 4.5f, 0.5f, 9);
+        floor = new Wall(world, 8, 0, 16, 0f);
+        floor = new Wall(world, 8, 9, 16, 0f);
+        floor = new Wall(world, 2, 8, 4, 0f);
+        floor = new Wall(world, 7.5f, 9, 0, 1f);
 
-        buttonSettings = new Ball(world, 10, 8, 0.5f, true);
-        buttonLevel = new Ball(world, 3, 8, 0.5f, false);
+        buttonLevel = new Ball(world, 8, 3.5f, 1f, false);
+        buttonSettings = new Ball(world, 6, 3.5f, 0.4f, false);
+        buttonAbout = new Ball(world, 10, 3.5f, 0.4f, false);
+
+        box = new Box(world, 2, 7, 2, 0.5f, true);
+
+        for (int i = 1; i < 20; i++) {
+            gear = new Gear(world, 0, i, 6, true, 0.3f, -3, 35 , 50);
+        }
+
+
+        //ListTextureBall.put(textureLevel, buttonLevel);
+        //ListTextureBall.put(textureSettings, buttonSettings);
     }
 
     @Override
@@ -75,15 +95,27 @@ public class WorldIntro implements Screen {
     // Отрисовываем спрайт
         JG.batch.setProjectionMatrix(JG.camera.combined);
         JG.batch.begin();
+        /*for (Texture i : ListTextureBall.keySet()) {
+            JG.batch.draw(i,
+                    ListTextureBall.get(i).body.getPosition().x- ListTextureBall.get(i).r,
+                    ListTextureBall.get(i).body.getPosition().y- ListTextureBall.get(i).r,
+                    0, ListTextureBall.get(i).r*2, ListTextureBall.get(i).r*2, ListTextureBall.get(i).r*2,
+                    1,1,0,0,0,100,100,false,false);
+        }*/
         JG.batch.draw(textureSettings,
-            buttonSettings.body.getPosition().x- buttonSettings.r,
-            buttonSettings.body.getPosition().y- buttonSettings.r,
-            0, buttonSettings.r*2, buttonSettings.r*2, buttonSettings.r*2,
-            1,1,0,0,0,100,100,false,false);
+                buttonSettings.body.getPosition().x- buttonSettings.r,
+                buttonSettings.body.getPosition().y- buttonSettings.r,
+                0, buttonSettings.r*2, buttonSettings.r*2, buttonSettings.r*2,
+                1,1,0,0,0,100,100,false,false);
         JG.batch.draw(textureLevel,
                 buttonLevel.body.getPosition().x- buttonLevel.r,
                 buttonLevel.body.getPosition().y- buttonLevel.r,
                 0, buttonLevel.r*2, buttonLevel.r*2, buttonLevel.r*2,
+                1,1,0,0,0,100,100,false,false);
+        JG.batch.draw(textureAbout,
+                buttonAbout.body.getPosition().x- buttonAbout.r,
+                buttonAbout.body.getPosition().y- buttonAbout.r,
+                0, buttonAbout.r*2, buttonAbout.r*2, buttonAbout.r*2,
                 1,1,0,0,0,100,100,false,false);
         JG.batch.end();
     }
