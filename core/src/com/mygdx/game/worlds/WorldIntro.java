@@ -20,6 +20,9 @@ import com.mygdx.game.objects.Swing;
 import com.mygdx.game.objects.Triangle;
 import com.mygdx.game.objects.Wall;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class WorldIntro implements Screen {
     JavaGame JG;
 
@@ -31,7 +34,7 @@ public class WorldIntro implements Screen {
     Vector3 touch;
     TextButton btnPlay, btnSettings, btnExit;
 
-    //Map<Texture, Ball> ListTextureBall = new HashMap<Texture, Ball>();
+    Map<Texture, Ball> ListTextureBall = new HashMap<Texture, Ball>();
     World world;
 
     Triangle triangle;
@@ -60,7 +63,7 @@ public class WorldIntro implements Screen {
         floor = new Wall(world, 7.5f, 9, 0, 1f);
 
         buttonLevel = new Ball(world, 8, 3.5f, 1f, false);
-        buttonSettings = new Ball(world, 6, 3.5f, 0.4f, false);
+        buttonSettings = new Ball(world, 6, 3.5f, 0.4f, true);
         buttonAbout = new Ball(world, 10, 3.5f, 0.4f, false);
 
         box = new Box(world, 2, 7, 2, 0.5f, true);
@@ -70,8 +73,8 @@ public class WorldIntro implements Screen {
         }
 
 
-        //ListTextureBall.put(textureLevel, buttonLevel);
-        //ListTextureBall.put(textureSettings, buttonSettings);
+        ListTextureBall.put(textureLevel, buttonLevel);
+        ListTextureBall.put(textureSettings, buttonSettings);
     }
 
     @Override
@@ -88,21 +91,20 @@ public class WorldIntro implements Screen {
         }
         ScreenUtils.clear(0,0,0,1);
         world.step(1/60f,6,2);
-        //JG.camera.update();
         JG.debugRenderer.render(world,JG.camera.combined);
 
 
     // Отрисовываем спрайт
         JG.batch.setProjectionMatrix(JG.camera.combined);
         JG.batch.begin();
-        /*for (Texture i : ListTextureBall.keySet()) {
+        for (Texture i : ListTextureBall.keySet()) {
             JG.batch.draw(i,
                     ListTextureBall.get(i).body.getPosition().x- ListTextureBall.get(i).r,
                     ListTextureBall.get(i).body.getPosition().y- ListTextureBall.get(i).r,
                     0, ListTextureBall.get(i).r*2, ListTextureBall.get(i).r*2, ListTextureBall.get(i).r*2,
                     1,1,0,0,0,100,100,false,false);
-        }*/
-        JG.batch.draw(textureSettings,
+        }
+        /*JG.batch.draw(textureSettings,
                 buttonSettings.body.getPosition().x- buttonSettings.r,
                 buttonSettings.body.getPosition().y- buttonSettings.r,
                 0, buttonSettings.r*2, buttonSettings.r*2, buttonSettings.r*2,
@@ -116,7 +118,7 @@ public class WorldIntro implements Screen {
                 buttonAbout.body.getPosition().x- buttonAbout.r,
                 buttonAbout.body.getPosition().y- buttonAbout.r,
                 0, buttonAbout.r*2, buttonAbout.r*2, buttonAbout.r*2,
-                1,1,0,0,0,100,100,false,false);
+                1,1,0,0,0,100,100,false,false);*/
         JG.batch.end();
     }
 

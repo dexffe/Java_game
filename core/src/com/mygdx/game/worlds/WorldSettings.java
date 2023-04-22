@@ -26,6 +26,7 @@ import com.mygdx.game.JavaGame;
 import com.mygdx.game.objects.Arc;
 import com.mygdx.game.objects.Ball;
 import com.mygdx.game.objects.Gear;
+import com.mygdx.game.objects.ImpulseBox;
 import com.mygdx.game.objects.Triangle;
 import com.mygdx.game.objects.Swing;
 import com.mygdx.game.objects.Wall;
@@ -49,10 +50,8 @@ public class WorldSettings implements Screen {
     Gear gear;
     Swing swing;
     Arc arc;
+    ImpulseBox impulseBox1, impulseBox2;
 
-    PolygonShape sensorShape;
-    FixtureDef sensorFixtureDef;
-    Body sensorBody;
 
 
     public WorldSettings(JavaGame context) {
@@ -75,59 +74,16 @@ public class WorldSettings implements Screen {
 
 
 
-        ballSettings = new Ball(world, 10, 3, 0.5f, true);
-        ball = new Ball(world, 6f, 8, 0.2f, true);
+        ballSettings = new Ball(world, 13, 2, 0.5f, true);
+        ball = new Ball(world, 12.8f, 3.5f, 0.2f, true);
 
 
         arc = new Arc(world, 1.7f, 7.3f, 30, 1.7f, 3.2f, 0.7f);
         arc = new Arc(world, 1f, 8f, 30, 1.7f, 3.2f, 1f);
 
 
-        sensorShape = new PolygonShape();
-        sensorShape.setAsBox(2.5f, 0.5f, new Vector2(5, 0.5f), 0); // установка размеров квадрата
-
-// Создание фикстуры для датчика
-        sensorFixtureDef = new FixtureDef();
-        sensorFixtureDef.shape = sensorShape;
-        sensorFixtureDef.isSensor = true; // Установка флага isSensor в true для создания датчика столкновений
-        sensorBody = world.createBody(new BodyDef());
-        sensorBody.createFixture(sensorFixtureDef);
-        System.out.println(ball.body.getPosition());
-
-
-        world.setContactListener(new ContactListener() {
-            @Override
-            public void beginContact(Contact contact) {
-                // Получение объекта, который столкнулся с датчиком
-                Fixture fixtureA = contact.getFixtureA();
-                Fixture fixtureB = contact.getFixtureB();
-                Body bodyA = fixtureA.getBody();
-                Body bodyB = fixtureB.getBody();
-                if (bodyA == ball.body && fixtureA.isSensor()) {
-                    // Добавление импульса к телу объекта
-                    ball.body.applyLinearImpulse(new Vector2(10f, 0), ball.body.getWorldCenter(), true);
-                } else if (bodyB == ball.body && fixtureB.isSensor()) {
-                    // Добавление импульса к телу объекта
-                    ball.body.applyLinearImpulse(new Vector2(10f, 0), ball.body.getWorldCenter(), true);
-                }
-            }
-
-            @Override
-            public void endContact(Contact contact) {
-                System.out.println("YES");
-            }
-
-            @Override
-            public void preSolve(Contact contact, Manifold oldManifold) {
-                //System.out.println("YES");
-            }
-
-            @Override
-            public void postSolve(Contact contact, ContactImpulse impulse) {
-                //System.out.println("YES");
-            }
-        });
-
+        impulseBox2 = new ImpulseBox(world, 5, 0.5f, 2.5f, 0.5f, ball.body, "Left");
+        impulseBox1 = new ImpulseBox(world, 0f, 0.5f, 0.3f, 2.5f, ball.body, "Up");
     }
 
     @Override
@@ -152,6 +108,11 @@ public class WorldSettings implements Screen {
                 ballSettings.body.getPosition().x- ballSettings.r,
                 ballSettings.body.getPosition().y- ballSettings.r,
                 0, ballSettings.r*2, ballSettings.r*2, ballSettings.r*2,
+                1,1,0,0,0,100,100,false,false);
+        JG.batch.draw(texture,
+                ball.body.getPosition().x- ball.r,
+                ball.body.getPosition().y- ball.r,
+                0, ball.r*2, ball.r*2, ball.r*2,
                 1,1,0,0,0,100,100,false,false);
         JG.batch.end();
     }
@@ -181,6 +142,5 @@ public class WorldSettings implements Screen {
         world.dispose();
         debugRenderer.dispose();
         batch.dispose();
-        sensorShape.dispose();
     }
 }

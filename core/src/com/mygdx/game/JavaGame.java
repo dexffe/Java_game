@@ -38,7 +38,7 @@ public class JavaGame extends Game {
 		worldGame = new WorldGame(this);
 		worldSettings = new WorldSettings(this);
 
-		setScreen(worldLevel);
+		setScreen(worldSettings);
 	}
 
 
