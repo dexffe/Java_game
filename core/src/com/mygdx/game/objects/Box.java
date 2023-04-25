@@ -1,9 +1,9 @@
 package com.mygdx.game.objects;
 
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.Fixture;
-import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.ChainShape;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
@@ -12,26 +12,27 @@ public class Box {
     public Body body;
     PolygonShape boxShape;
 
-    public Box(World world, float x, float y, float w, float h, boolean dynamic){
+    public Box(World world, float[] vertices, boolean dynamic){
+
+        ChainShape chainShape = new ChainShape();
+        chainShape.createChain(vertices);
+
         BodyDef bodyDef = new BodyDef();
+
         if (dynamic){
             bodyDef.type = BodyDef.BodyType.DynamicBody;
         } else {bodyDef.type = BodyDef.BodyType.StaticBody;}
-        bodyDef.position.set(x, y);
 
-        body = world.createBody(bodyDef);
+        Body body = world.createBody(bodyDef);
+        body.createFixture(chainShape, 1);
+        chainShape.dispose();
 
-        boxShape = new PolygonShape();
-        boxShape.setAsBox(w, h);
-
-        FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.shape = boxShape;
-        fixtureDef.density = 1f; // Плотность коробки
-        fixtureDef.friction = 0.3f; // Коэффициент трения коробки
-        fixtureDef.restitution = 0.5f; // Коэффициент упругости коробки
-
-        Fixture fixture = body.createFixture(fixtureDef);
-
-        boxShape.dispose();
+        // Рисуем цепную форму
+        ShapeRenderer shapeRenderer = new ShapeRenderer();
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        for (int i = 0; i < vertices.length / 2 - 1; i++) {
+            shapeRenderer.line(vertices[i * 2], vertices[i * 2 + 1], vertices[(i + 1) * 2], vertices[(i + 1) * 2 + 1]);
+        }
+        shapeRenderer.end();
     }
 }

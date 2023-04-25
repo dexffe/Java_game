@@ -43,6 +43,7 @@ public class WorldIntro implements Screen {
     Gear gear;
     Swing swing;
     Box box;
+    Ball ball;
 
     public WorldIntro(JavaGame context) {
         JG = context;
@@ -63,10 +64,12 @@ public class WorldIntro implements Screen {
         floor = new Wall(world, 7.5f, 9, 0, 1f);
 
         buttonLevel = new Ball(world, 8, 3.5f, 1f, false);
-        buttonSettings = new Ball(world, 6, 3.5f, 0.4f, true);
+        buttonSettings = new Ball(world, 6, 3.5f, 0.4f, false);
         buttonAbout = new Ball(world, 10, 3.5f, 0.4f, false);
 
-        box = new Box(world, 2, 7, 2, 0.5f, true);
+        box = new Box(world, new float[]{1f, 7.5f, 1f, 7f, 4f, 7f, 4f, 7.5f}, true);
+
+        ball = new Ball(world, 3f, 8, 0.3f, true);
 
         for (int i = 1; i < 20; i++) {
             gear = new Gear(world, 0, i, 6, true, 0.3f, -3, 35 , 50);
@@ -75,6 +78,7 @@ public class WorldIntro implements Screen {
 
         ListTextureBall.put(textureLevel, buttonLevel);
         ListTextureBall.put(textureSettings, buttonSettings);
+        ListTextureBall.put(textureAbout, buttonAbout);
     }
 
     @Override
@@ -88,6 +92,9 @@ public class WorldIntro implements Screen {
             if (buttonLevel.hit(touch.x, touch.y)) {
                 JG.setScreen(JG.worldLevel);
             }
+            /*if (buttonAbout.hit(touch.x, touch.y)) {
+                JG.setScreen(JG.worldAbout);
+            }*/
         }
         ScreenUtils.clear(0,0,0,1);
         world.step(1/60f,6,2);
