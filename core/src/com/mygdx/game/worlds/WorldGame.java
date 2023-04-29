@@ -13,12 +13,12 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-import com.mygdx.game.JavaGame;
 import com.mygdx.game.objects.*;
 
 public class WorldGame implements Screen {
-    JavaGame JG;
     boolean pause;
+    float w = 16;
+    public static float h = 9;
 
     Texture texturePause;
     Box2DDebugRenderer debugRenderer;
@@ -36,13 +36,17 @@ public class WorldGame implements Screen {
     Gear gear;
     Swing swing;
 
-    public WorldGame(JavaGame context) {
-        JG = context;
+    public WorldGame() {
+        world = new World(new Vector2(0, -10), false);
+        camera = new OrthographicCamera();
+        camera.setToOrtho(false, w, h);
+        batch = new SpriteBatch();
+        debugRenderer = new Box2DDebugRenderer();
     }
 
     @Override
     public void show() {
-        world = new World(new Vector2(0, -10), false);
+
 
         texturePause = new Texture(Gdx.files.internal("pause.png"));
         touch = new Vector3();
@@ -76,26 +80,26 @@ public class WorldGame implements Screen {
     public void render(float delta) {
         if (Gdx.input.justTouched()) {
             touch.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-            JG.camera.unproject(touch);
+            camera.unproject(touch);
             if (buttonPause.hit(touch.x, touch.y)) {
                 pause();
             }
         }
         ScreenUtils.clear(0,0,0,1);
         if (!pause)world.step(1/60f,6,2);
-        //JG.camera.update();
-        JG.debugRenderer.render(world,JG.camera.combined);
+        camera.update();
+        debugRenderer.render(world,camera.combined);
 
 
         // Отрисовываем спрайт
-        JG.batch.setProjectionMatrix(JG.camera.combined);
-        JG.batch.begin();
-        JG.batch.draw(texturePause,
+        batch.setProjectionMatrix(camera.combined);
+        batch.begin();
+        batch.draw(texturePause,
                 buttonPause.body.getPosition().x- buttonPause.r,
                 buttonPause.body.getPosition().y- buttonPause.r,
                 0, buttonPause.r*2, buttonPause.r*2, buttonPause.r*2,
                 1,1,0,0,0,100,100,false,false);
-        JG.batch.end();
+        batch.end();
     }
 
     @Override

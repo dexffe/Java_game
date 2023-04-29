@@ -2,7 +2,7 @@ package com.mygdx.game.objects;
 
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.ChainShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
@@ -10,28 +10,40 @@ import com.badlogic.gdx.physics.box2d.World;
 public class Box {
 
     public Body body;
-    PolygonShape boxShape;
+    BodyDef bodyDef;
+    FixtureDef fixtureDef;
 
-    public Box(World world, float x, float y, float w, float h, boolean dynamic){
-        BodyDef bodyDef = new BodyDef();
+    public Box(World world, float[] vertices, boolean dynamic){
+
+        //ChainShape shape = new ChainShape();
+        //shape.createChain(vertices);
+        PolygonShape shape = new PolygonShape();
+        shape.set(vertices);
+
+        bodyDef = new BodyDef();
+
         if (dynamic){
             bodyDef.type = BodyDef.BodyType.DynamicBody;
         } else {bodyDef.type = BodyDef.BodyType.StaticBody;}
-        bodyDef.position.set(x, y);
 
         body = world.createBody(bodyDef);
 
-        boxShape = new PolygonShape();
-        boxShape.setAsBox(w, h);
+        fixtureDef = new FixtureDef();
+        fixtureDef.shape = shape;
+        fixtureDef.density = 0.5f;
+        fixtureDef.friction = 0.4f;
+        fixtureDef.restitution = 0.6f;
 
-        FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.shape = boxShape;
-        fixtureDef.density = 1f; // Плотность коробки
-        fixtureDef.friction = 0.3f; // Коэффициент трения коробки
-        fixtureDef.restitution = 0.5f; // Коэффициент упругости коробки
 
-        Fixture fixture = body.createFixture(fixtureDef);
+        body.createFixture(fixtureDef);
+        shape.dispose();
 
-        boxShape.dispose();
+        // Рисуем цепную форму
+        /*ShapeRenderer shapeRenderer = new ShapeRenderer();
+        shapeRenderer.begin(ShapeRenderer.ShapeType.Line);
+        for (int i = 0; i < vertices.length / 2 - 1; i++) {
+            shapeRenderer.line(vertices[i * 2], vertices[i * 2 + 1], vertices[(i + 1) * 2], vertices[(i + 1) * 2 + 1]);
+        }
+        shapeRenderer.end();*/
     }
 }
