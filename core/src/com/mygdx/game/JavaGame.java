@@ -3,25 +3,27 @@ package com.mygdx.game;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.mygdx.game.worlds.WorldAbout;
 import com.mygdx.game.worlds.WorldGame;
-import com.mygdx.game.worlds.WorldIntro;
-import com.mygdx.game.worlds.WorldLevel;
-import com.mygdx.game.worlds.WorldSettings;
+import com.mygdx.game.worlds.WorldsMenu;
 
 public class JavaGame extends Game {
 
-	public static float w = 16;
+	public static float w = 16*3;
 	public static float h = 9;
 
 	public SpriteBatch batch;
 	public OrthographicCamera camera;
 	public Box2DDebugRenderer debugRenderer;
+	public Vector3 touch;
 
-	public WorldIntro worldIntro;
+	public WorldAbout worldAbout;
 	public WorldGame worldGame;
-	public WorldLevel worldLevel;
-	public WorldSettings worldSettings;
+	public WorldsMenu worldsMenu;
+
+
 
 
 
@@ -30,22 +32,25 @@ public class JavaGame extends Game {
 
 		batch = new SpriteBatch();
 		camera = new OrthographicCamera();
-		camera.setToOrtho(false, w, h);
+		touch = new Vector3();
+
+		camera.setToOrtho(false, w/3, h);
+		camera.position.set(w/6, h/2, 0);
+
 		debugRenderer = new Box2DDebugRenderer();
 
-		worldIntro = new WorldIntro(this);
-		worldLevel = new WorldLevel(this);
-		worldGame = new WorldGame(this);
-		worldSettings = new WorldSettings(this);
+		worldsMenu = new WorldsMenu(this);
+		//worldAbout = new WorldAbout(this);
+		worldGame = new WorldGame();
 
-		setScreen(worldSettings);
+		setScreen(worldsMenu);
 	}
 
 
 
 	@Override
 	public void render() {
-		super.render();
+super.render();
 	}
 
 	@Override
