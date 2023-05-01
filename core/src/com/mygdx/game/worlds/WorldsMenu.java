@@ -31,7 +31,7 @@ import java.util.Map;
 public class WorldsMenu  implements Screen {
     JavaGame JG;
 
-    Texture textureGoIntroInSettings;
+    Texture textureGoIntroInSettings, tBg;
     Texture textureLevelInIntro, textureSettingsInIntro, textureAboutInIntro;
     Texture textureIntroInLevel, textureGameInLevel;
 
@@ -88,6 +88,7 @@ public class WorldsMenu  implements Screen {
 
         //Intro objects
         x = 16;
+        tBg = new Texture("background.png");
         textureSettingsInIntro = new Texture(Gdx.files.internal("settings.png"));
         textureLevelInIntro = new Texture(Gdx.files.internal("start.png"));
         textureAboutInIntro = new Texture(Gdx.files.internal("skelet.png"));
@@ -128,6 +129,7 @@ public class WorldsMenu  implements Screen {
 
     @Override
     public void render(float delta) {
+
         if (Gdx.input.justTouched()) {
             touch.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             JG.camera.unproject(touch);
@@ -163,6 +165,12 @@ public class WorldsMenu  implements Screen {
         // Отрисовываем спрайт
         JG.batch.setProjectionMatrix(JG.camera.combined);
         JG.batch.begin();
+
+        JG.batch.draw(tBg,0,0, w/3, h);
+        JG.batch.draw(tBg,w/3, 0, w/3, h);
+        JG.batch.draw(tBg,w/3+ w/3, 0, w/3, h);
+
+
         for (Texture i : ListTextureBall.keySet()) {
             JG.batch.draw(i,
                     ListTextureBall.get(i).body.getPosition().x- ListTextureBall.get(i).r,
