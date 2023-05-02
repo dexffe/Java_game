@@ -56,6 +56,9 @@ public class WorldsMenu  implements Screen {
     Box box;
     ImpulseBox impulseBox;
     float x;
+    float speed;
+    boolean goScreen;
+    String fromScreen, toScreen;
 
 
 
@@ -128,41 +131,98 @@ public class WorldsMenu  implements Screen {
 
     @Override
     public void render(float delta) {
-        if (Gdx.input.justTouched()) {
-            touch.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-            JG.camera.unproject(touch);
-            if (buttonSettingsInIntro.hit(touch.x, touch.y)) {
-                JG.camera.position.set(w/6, h/2, 0);
-            }
-            if (buttonAboutInIntro.hit(touch.x, touch.y)) {
-                //camera.position.set(w/6, h/2, 0);
-            }
-            if (buttonLevelInIntro.hit(touch.x, touch.y)) {
-                JG.camera.position.set(w/1.2f, h/2, 0);
-            }
-
-            if (ballGoIntroInSettings.hit(touch.x, touch.y)) {
-                JG.camera.position.set(w/2, h/2, 0);
-            }
-
-            if (buttonGameInLevel.hit(touch.x, touch.y)) {
-                JG.setScreen(JG.worldGame);
-            }
-            if (buttonIntroInLevel.hit(touch.x, touch.y)) {
-                JG.camera.position.set(w/2, h/2, 0);
-            }
 
 
-        }
         ScreenUtils.clear(0,0,0,1);
         world.step(1/60f,6,2);
         JG.camera.update();
         JG.debugRenderer.render(world,JG.camera.combined);
 
+        if (goScreen){
+            speed += 0.3;
+            if (fromScreen == "Settings" && toScreen == "Intro"){    //  Settings -> Intro
+                if (w/6+speed <= w/2) {
+                    JG.camera.position.set(w/6+ speed, h/2, 0);
+                }else {
+                    goScreen = false;
+                    speed = 0;
+                }
+            }
+            if (fromScreen == "Intro" && toScreen == "Level"){
+                if (w/2+speed <= w/1.2f) {             //  Intro -> Level
+                    JG.camera.position.set(w/2+ speed, h/2, 0);
+                }else {
+                    goScreen = false;
+                    speed = 0;
+                }
+            }
+            if (fromScreen == "Level" && toScreen == "Intro"){
+                if (w/1.2f-speed >= w/2) {             //  Level -> Intro
+                    JG.camera.position.set(w/1.2f- speed, h/2, 0);
+                }else {
+                    goScreen = false;
+                    speed = 0;
+                }
+            }
+            if (fromScreen == "Intro" && toScreen == "Settings") {
+                if (w / 2 - speed >= w / 6) {             //  Intro -> Settings
+                    JG.camera.position.set(w / 2 - speed, h / 2, 0);
+                } else {
+                    goScreen = false;
+                    speed = 0;
+                }
+            }
+        }
+
+
+
 
         // Отрисовываем спрайт
         JG.batch.setProjectionMatrix(JG.camera.combined);
         JG.batch.begin();
+        if (Gdx.input.justTouched()) {
+            touch.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+            JG.camera.unproject(touch);
+            if (buttonSettingsInIntro.hit(touch.x, touch.y)) {
+                fromScreen = "Intro";
+                toScreen = "Settings";
+                goScreen = true;
+                //JG.camera.position.set(w/6, h/2, 0);
+            }
+            if (buttonAboutInIntro.hit(touch.x, touch.y)) {
+                fromScreen = "Intro";
+                toScreen = "About";
+                goScreen = true;
+                //camera.position.set(w/6, h/2, 0);
+            }
+            if (buttonLevelInIntro.hit(touch.x, touch.y)) {
+                fromScreen = "Intro";
+                toScreen = "Level";
+                goScreen = true;
+                //JG.camera.position.set(w/1.2f, h/2, 0);
+            }
+
+            if (ballGoIntroInSettings.hit(touch.x, touch.y)) {
+                fromScreen = "Settings";
+                toScreen = "Intro";
+                goScreen = true;
+                //JG.camera.position.set(w/2, h/2, 0);
+            }
+
+            if (buttonGameInLevel.hit(touch.x, touch.y)) {
+                fromScreen = "Intro";
+                toScreen = "Settings";
+                JG.setScreen(JG.worldGame);
+            }
+            if (buttonIntroInLevel.hit(touch.x, touch.y)) {
+                fromScreen = "Level";
+                toScreen = "Intro";
+                goScreen = true;
+                //JG.camera.position.set(w/2, h/2, 0);
+            }
+
+
+        }
         for (Texture i : ListTextureBall.keySet()) {
             JG.batch.draw(i,
                     ListTextureBall.get(i).body.getPosition().x- ListTextureBall.get(i).r,
