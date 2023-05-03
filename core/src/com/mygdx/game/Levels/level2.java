@@ -1,4 +1,4 @@
-package com.mygdx.game.Level;
+package com.mygdx.game.Levels;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -19,7 +19,7 @@ import com.mygdx.game.objects.Swing;
 import com.mygdx.game.objects.Triangle;
 import com.mygdx.game.objects.Wall;
 
-public class level3 implements Screen{
+public class level2 implements Screen{
     JavaGame JG;
     boolean pause;
 
@@ -39,7 +39,7 @@ public class level3 implements Screen{
     Gear gear;
     Swing swing;
 
-    public level3(JavaGame context) {
+    public level2(JavaGame context) {
         JG = context;
     }
 

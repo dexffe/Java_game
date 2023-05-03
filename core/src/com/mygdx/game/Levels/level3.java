@@ -1,4 +1,4 @@
-package com.mygdx.game.Level;
+package com.mygdx.game.Levels;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -19,7 +19,7 @@ import com.mygdx.game.objects.Swing;
 import com.mygdx.game.objects.Triangle;
 import com.mygdx.game.objects.Wall;
 
-public class level1 implements Screen{
+public class level3 implements Screen{
     JavaGame JG;
     boolean pause;
 
@@ -39,7 +39,7 @@ public class level1 implements Screen{
     Gear gear;
     Swing swing;
 
-    public level1(JavaGame context) {
+    public level3(JavaGame context) {
         JG = context;
     }
 
@@ -50,11 +50,27 @@ public class level1 implements Screen{
         texturePause = new Texture(Gdx.files.internal("pause.png"));
         touch = new Vector3();
 
-        floor = new Wall(world, 8, 2, 16, 0f);
+        floor = new Wall(world, 8, 1, 16, 0.5f);
+        floor = new Wall(world, 1, 4.5f, 0.5f, 9);
+        floor = new Wall(world, 15, 4.5f, 0.5f, 9);
 
         ball = new Ball(world, 12, 8, 0.5f, true);
+        ball = new Ball(world, 11, 8, 0.5f, true);
+        ball = new Ball(world, 10, 8, 0.5f, true);
+        ball = new Ball(world, 9, 8, 0.5f, true);
+        ball = new Ball(world, 8, 8, 0.5f, true);
+        ball = new Ball(world, 7, 8, 0.5f, true);
+        ball = new Ball(world, 6, 8, 0.5f, true);
+        ball = new Ball(world, 5, 8, 0.5f, true);
+        ball = new Ball(world, 4, 8, 0.5f, true);
+        ball = new Ball(world, 3, 8, 0.5f, true);
 
         triangle = new Triangle(world, 7, 1.5f, new float[] {1f, 2, 2, 0, 0, 0});
+        triangle = new Triangle(world, 1.5f, 4.5f, new float[] {0f, 1, 1, 0, 0, 0});
+        triangle = new Triangle(world, 13f, 4.5f, new float[] {1, 1, 1, 0, 0, 0});
+
+        gear = new Gear(world, 0f, 3, 3, true, 0.7f, 13, 35, 50);
+        gear = new Gear(world, 0f, 13, 3, true, 0.7f, -13, 35 , 50);
 
         buttonPause = new Ball(world, 15.5f, 8.5f, 0.3f, false);
     }

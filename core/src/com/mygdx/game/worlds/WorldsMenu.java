@@ -13,6 +13,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.joints.WeldJointDef;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.game.JavaGame;
@@ -20,7 +21,7 @@ import com.mygdx.game.objects.Arc;
 import com.mygdx.game.objects.Ball;
 import com.mygdx.game.objects.Box;
 import com.mygdx.game.objects.Gear;
-import com.mygdx.game.objects.ImpulseBox;
+import com.mygdx.game.objects.SensorBox;
 import com.mygdx.game.objects.Swing;
 import com.mygdx.game.objects.Triangle;
 import com.mygdx.game.objects.Wall;
@@ -54,7 +55,8 @@ public class WorldsMenu  implements Screen {
     Swing swing;
     Arc arc;
     Box box;
-    ImpulseBox impulseBox;
+    Box box1, box2, box3;
+    SensorBox impulseBox, destroyBox;
     float x;
     float speed;
     boolean goScreen;
@@ -85,8 +87,9 @@ public class WorldsMenu  implements Screen {
         arc = new Arc(world, 1.7f, 7.3f, 10, 1.7f, 3f, 0.7f);
         arc = new Arc(world, 1f, 8f, 10, 1.7f, 3f, 1f);
         arc = new Arc(world, 1f, 1f, 10, -1.7f, -3f, 1f);
-        impulseBox = new ImpulseBox(world, 5, 0.5f, 2.5f, 0.5f, ball.body, "Left");
-        impulseBox = new ImpulseBox(world, 0f, 0.5f, 0.3f, 2.5f, ball.body, "Up");
+        impulseBox = new SensorBox(world, 5, 0.5f, 2.5f, 0.5f, ball.body, "Left");
+        impulseBox = new SensorBox(world, 5, 8.5f, 2.5f, 0.5f, ball.body, "Right");
+        impulseBox = new SensorBox(world, 0f, 0.5f, 0.3f, 2.5f, ball.body, "Up");
         ListTextureBall.put(textureGoIntroInSettings, ballGoIntroInSettings);
 
         //Intro objects
@@ -101,9 +104,33 @@ public class WorldsMenu  implements Screen {
         buttonLevelInIntro = new Ball(world, 8+x, 3.5f, 1f, false);
         buttonSettingsInIntro = new Ball(world, 6+x, 3.5f, 0.4f, false);
         buttonAboutInIntro = new Ball(world, 10+x, 3.5f, 0.4f, false);
-        box = new Box(world, new float[]{1f+x-0.5f, 7.5f, 1f+x-0.5f, 7f, 4f+x-0.5f, 7f, 4f+x-0.5f, 7.5f}, true);
+
+        box1 = new Box(world, new float[]{0.8f+x-0.5f, 7.5f, 0.8f+x-0.5f, 7f, 3.8f+x-0.5f, 7f, 3.8f+x-0.5f, 7.5f}, true);
+        box2 = new Box(world, new float[]{0.8f+x-0.5f, 8f, 0.8f+x-0.5f, 7f, 0.8f+x, 7f, 0.8f+x, 8f}, true);
+        box3 = new Box(world, new float[]{3.3f+x-0.5f, 8f, 3.3f+x-0.5f, 7f, 3.3f+x, 7f, 3.3f+x, 8f}, true);
+        //world.destroyBody(box1.body);
+
+        WeldJointDef rjd = new WeldJointDef();
+        rjd.collideConnected = false;
+        rjd.bodyA = box1.body;
+        rjd.bodyB = box2.body;
+        rjd.localAnchorA.set(box1.body.getPosition().x, box1.body.getPosition().y);
+        rjd.localAnchorB.set(box2.body.getPosition().x, box2.body.getPosition().y);
+        world.createJoint(rjd);
+
+        WeldJointDef rjd1 = new WeldJointDef();
+        rjd1.collideConnected = false;
+        rjd1.bodyA = box1.body;
+        rjd1.bodyB = box3.body;
+        rjd1.localAnchorA.set(box1.body.getPosition().x, box1.body.getPosition().y);
+        rjd1.localAnchorB.set(box3.body.getPosition().x, box3.body.getPosition().y);
+        world.createJoint(rjd1);
+
+
+
+
         for (int i = 1; i < 16; i++) {
-            gear = new Gear(world, 0, i+x, 6, true, 0.3f, -3, 35 , 50);
+            gear = new Gear(world, 0, i+x, 6, true, 0.3f, -3, 50 , 50);
         }
         ListTextureBall.put(textureLevelInIntro, buttonLevelInIntro);
         ListTextureBall.put(textureSettingsInIntro, buttonSettingsInIntro);
@@ -116,6 +143,7 @@ public class WorldsMenu  implements Screen {
         floor = new Wall(world, 8+x, 0, 16, 0f);
         floor = new Wall(world, 8+x, 9, 16, 0f);
         floor = new Wall(world, 16+x, 4.5f, 0f, 9);
+        impulseBox = new SensorBox(world, 5+x, 0.5f, 2.5f, 0.5f, ball.body, "Left");
         buttonIntroInLevel = new Ball(world, 15+x, 1, 0.5f, false);
         buttonGameInLevel = new Ball(world, 2+x, 3, 0.5f, false);float h = 6f;
         float count = 0;
@@ -131,6 +159,48 @@ public class WorldsMenu  implements Screen {
 
     @Override
     public void render(float delta) {
+        /*final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+
+        final Runnable runnable = new Runnable() {
+            int countdownStarter = 5;  //27
+
+            public void run() {
+                //System.out.println(countdownStarter);
+                countdownStarter--;
+
+
+                if (countdownStarter < 0) {
+                    System.out.println("over");
+                    x = 16;
+                    countdownStarter = 27;
+                    world.destroyBody(box1.body);
+                    world.destroyBody(box2.body);
+                    world.destroyBody(box3.body);
+                    box1 = new Box(world, new float[]{0.8f+x-0.5f, 7.5f, 0.8f+x-0.5f, 7f, 3.8f+x-0.5f, 7f, 3.8f+x-0.5f, 7.5f}, true);
+                    box2 = new Box(world, new float[]{0.8f+x-0.5f, 8f, 0.8f+x-0.5f, 7f, 0.8f+x, 7f, 0.8f+x, 8f}, true);
+                    box3 = new Box(world, new float[]{3.3f+x-0.5f, 8f, 3.3f+x-0.5f, 7f, 3.3f+x, 7f, 3.3f+x, 8f}, true);
+                    //world.destroyBody(box1.body);
+
+                    WeldJointDef rjd = new WeldJointDef();
+                    rjd.collideConnected = false;
+                    rjd.bodyA = box1.body;
+                    rjd.bodyB = box2.body;
+                    rjd.localAnchorA.set(box1.body.getPosition().x, box1.body.getPosition().y);
+                    rjd.localAnchorB.set(box2.body.getPosition().x, box2.body.getPosition().y);
+                    world.createJoint(rjd);
+
+                    WeldJointDef rjd1 = new WeldJointDef();
+                    rjd1.collideConnected = false;
+                    rjd1.bodyA = box1.body;
+                    rjd1.bodyB = box3.body;
+                    rjd1.localAnchorA.set(box1.body.getPosition().x, box1.body.getPosition().y);
+                    rjd1.localAnchorB.set(box3.body.getPosition().x, box3.body.getPosition().y);
+                    world.createJoint(rjd1);
+                    scheduler.shutdown();
+                }
+            }
+        };
+        scheduler.scheduleAtFixedRate(runnable, 0, 1, SECONDS);*/
 
 
         ScreenUtils.clear(0,0,0,1);
