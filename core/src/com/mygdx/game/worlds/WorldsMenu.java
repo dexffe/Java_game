@@ -1,7 +1,6 @@
 package com.mygdx.game.worlds;
 
-import static com.mygdx.game.JavaGame.h;
-import static com.mygdx.game.JavaGame.w;
+import static com.mygdx.game.JavaGame.*;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -34,7 +33,7 @@ public class WorldsMenu  implements Screen {
 
     Texture textureGoIntroInSettings;
     Texture textureLevelInIntro, textureSettingsInIntro, textureAboutInIntro;
-    Texture textureIntroInLevel, textureGameInLevel;
+    Texture textureIntroInLevel, textureLevel1InLevel, textureLevel2InLevel, textureLevel3InLevel;
 
     Box2DDebugRenderer debugRenderer;
     OrthographicCamera camera;
@@ -50,7 +49,7 @@ public class WorldsMenu  implements Screen {
     Wall floor;
     public Ball ballGoIntroInSettings, ball, ball1;
     public Ball buttonSettingsInIntro, buttonLevelInIntro, buttonAboutInIntro;
-    public Ball buttonIntroInLevel, buttonGameInLevel;
+    public Ball buttonIntroInLevel, buttonLevel1InLevel, buttonLevel2InLevel, buttonLevel3InLevel;
     Gear gear;
     Swing swing;
     Arc arc;
@@ -61,17 +60,18 @@ public class WorldsMenu  implements Screen {
     float speed;
     boolean goScreen;
     String fromScreen, toScreen;
+    float w, h;
 
 
 
     public WorldsMenu(JavaGame context) {
         JG = context;
+        JG.camera.setToOrtho(false, width, height);
         world = new World(new Vector2(0, -10), false);
         touch = new Vector3();
-    }
-
-    @Override
-    public void show() {
+        w = width*3;
+        h = height;
+        System.out.println("show");
 
         // Settings objects
         textureGoIntroInSettings = new Texture(Gdx.files.internal("return.png"));
@@ -126,9 +126,6 @@ public class WorldsMenu  implements Screen {
         rjd1.localAnchorB.set(box3.body.getPosition().x, box3.body.getPosition().y);
         world.createJoint(rjd1);
 
-
-
-
         for (int i = 1; i < 16; i++) {
             gear = new Gear(world, 0, i+x, 6, true, 0.3f, -3, 50 , 50);
         }
@@ -139,13 +136,18 @@ public class WorldsMenu  implements Screen {
         // Level objects
         x = 16*2;
         textureIntroInLevel = new Texture(Gdx.files.internal("return.png"));
-        textureGameInLevel = new Texture(Gdx.files.internal("start.png"));
+        textureLevel1InLevel = new Texture(Gdx.files.internal("start.png"));
+        textureLevel2InLevel = new Texture(Gdx.files.internal("start.png"));
+        textureLevel3InLevel = new Texture(Gdx.files.internal("start.png"));
         floor = new Wall(world, 8+x, 0, 16, 0f);
         floor = new Wall(world, 8+x, 9, 16, 0f);
         floor = new Wall(world, 16+x, 4.5f, 0f, 9);
         impulseBox = new SensorBox(world, 5+x, 0.5f, 2.5f, 0.5f, ball.body, "Left");
         buttonIntroInLevel = new Ball(world, 15+x, 1, 0.5f, false);
-        buttonGameInLevel = new Ball(world, 2+x, 3, 0.5f, false);float h = 6f;
+        buttonLevel1InLevel = new Ball(world, 2+x, 3, 0.5f, false);
+        buttonLevel2InLevel = new Ball(world, 4+x, 3, 0.5f, false);
+        buttonLevel3InLevel = new Ball(world, 6+x, 3, 0.5f, false);
+        float h = 6f;
         float count = 0;
         for (int i = 0; i < 12; i++) {
             gear = new Gear(world, 0, i+x, h, true, 0.3f, -3, 35 , 50);
@@ -154,7 +156,15 @@ public class WorldsMenu  implements Screen {
         }
         arc = new Arc(world, 11f+x, 5f, 30, 0f, -1.5f, 5f);
         ListTextureBall.put(textureIntroInLevel, buttonIntroInLevel);
-        ListTextureBall.put(textureGameInLevel, buttonGameInLevel);
+        ListTextureBall.put(textureLevel1InLevel, buttonLevel1InLevel);
+        ListTextureBall.put(textureLevel2InLevel, buttonLevel2InLevel);
+        ListTextureBall.put(textureLevel3InLevel, buttonLevel3InLevel);
+
+    }
+
+    @Override
+    public void show() {
+        JG.camera.position.set(w /2f, h/2, 0);
     }
 
     @Override
@@ -279,10 +289,14 @@ public class WorldsMenu  implements Screen {
                 //JG.camera.position.set(w/2, h/2, 0);
             }
 
-            if (buttonGameInLevel.hit(touch.x, touch.y)) {
-                fromScreen = "Intro";
-                toScreen = "Settings";
-                JG.setScreen(JG.worldGame);
+            if (buttonLevel1InLevel.hit(touch.x, touch.y)) {
+                JG.setScreen(JG.level1);
+            }
+            if (buttonLevel2InLevel.hit(touch.x, touch.y)) {
+                JG.setScreen(JG.level2);
+            }
+            if (buttonLevel3InLevel.hit(touch.x, touch.y)) {
+                JG.setScreen(JG.level3);
             }
             if (buttonIntroInLevel.hit(touch.x, touch.y)) {
                 fromScreen = "Level";

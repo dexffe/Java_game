@@ -12,8 +12,8 @@ import com.mygdx.game.worlds.WorldsMenu;
 
 public class JavaGame extends Game {
 
-	public static float w = 16*3;
-	public static float h = 9;
+	public static float width = 16;
+	public static float height = 9;
 
 	public SpriteBatch batch;
 	public OrthographicCamera camera;
@@ -39,8 +39,7 @@ public class JavaGame extends Game {
 		camera = new OrthographicCamera();
 		touch = new Vector3();
 
-		camera.setToOrtho(false, w/3, h);
-		camera.position.set(w/2f, h/2, 0);
+		//camera.setToOrtho(false, width, height);
 
 		debugRenderer = new Box2DDebugRenderer();
 

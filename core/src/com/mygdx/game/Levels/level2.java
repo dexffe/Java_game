@@ -1,19 +1,20 @@
 package com.mygdx.game.Levels;
 
+import static com.mygdx.game.JavaGame.height;
+import static com.mygdx.game.JavaGame.width;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.game.JavaGame;
 import com.mygdx.game.objects.Ball;
+import com.mygdx.game.objects.Box;
 import com.mygdx.game.objects.Gear;
 import com.mygdx.game.objects.Swing;
 import com.mygdx.game.objects.Triangle;
@@ -24,11 +25,8 @@ public class level2 implements Screen{
     boolean pause;
 
     Texture texturePause;
-    Box2DDebugRenderer debugRenderer;
-    OrthographicCamera camera;
     Sprite sprite;
     SpriteBatch batch;
-    Vector3 touch;
     TextButton btnPlay, btnSettings, btnExit;
 
     World world;
@@ -38,50 +36,53 @@ public class level2 implements Screen{
     Ball ball, buttonPause;
     Gear gear;
     Swing swing;
+    Box box;
 
     public level2(JavaGame context) {
-        JG = context;
-    }
 
-    @Override
-    public void show() {
         world = new World(new Vector2(0, -10), false);
-
+        JG = context;
         texturePause = new Texture(Gdx.files.internal("pause.png"));
-        touch = new Vector3();
 
-        floor = new Wall(world, 8, 1, 16, 0.5f);
-        floor = new Wall(world, 1, 4.5f, 0.5f, 9);
-        floor = new Wall(world, 15, 4.5f, 0.5f, 9);
+        floor = new Wall(world, width/2, height, 16, 0f);
+        floor = new Wall(world, width/2, 0, 16, 0f);
+        floor = new Wall(world, 0, height/2, 0, 9);
+        floor = new Wall(world, width, height/2, 0, 9);
 
-        ball = new Ball(world, 12, 8, 0.5f, true);
-        ball = new Ball(world, 11, 8, 0.5f, true);
-        ball = new Ball(world, 10, 8, 0.5f, true);
-        ball = new Ball(world, 9, 8, 0.5f, true);
-        ball = new Ball(world, 8, 8, 0.5f, true);
-        ball = new Ball(world, 7, 8, 0.5f, true);
-        ball = new Ball(world, 6, 8, 0.5f, true);
-        ball = new Ball(world, 5, 8, 0.5f, true);
-        ball = new Ball(world, 4, 8, 0.5f, true);
-        ball = new Ball(world, 3, 8, 0.5f, true);
+        floor = new Wall(world, width/2, 1.5f, 16, 0);
 
-        triangle = new Triangle(world, 7, 1.5f, new float[] {1f, 2, 2, 0, 0, 0});
-        triangle = new Triangle(world, 1.5f, 4.5f, new float[] {0f, 1, 1, 0, 0, 0});
-        triangle = new Triangle(world, 13f, 4.5f, new float[] {1, 1, 1, 0, 0, 0});
+        box = new Box(world, new float[]{5, 1.5f, 10, 1.5f, 10, 3f, 5, 3f}, false);
+        box = new Box(world, new float[]{6.5f, 3f, 8.5f, 3f, 8.5f, 3.5f, 6.5f, 3.5f}, false);
+        box = new Box(world, new float[]{14, 1.5f, 16, 1.5f, 13, 5.5f, 16, 5.5f}, false);
 
-        gear = new Gear(world, 0f, 3, 3, true, 0.7f, 13, 35, 50);
-        gear = new Gear(world, 0f, 13, 3, true, 0.7f, -13, 35 , 50);
+        gear = new Gear(world, 0, 7.5f, 4, true, 0.3f, -10, 50 , 50);
+
+        ball = new Ball(world, 1.5f, 3, 0.5f, true);
+
+
+        ball = new Ball(world, 1f, 0.75f, 0.4f, false);
+        ball = new Ball(world, 2.5f, 0.75f, 0.4f, false);
+        ball = new Ball(world, 14.5f, 0.75f, 0.4f, false);
 
         buttonPause = new Ball(world, 15.5f, 8.5f, 0.3f, false);
     }
 
     @Override
+    public void show() {
+        JG.camera.setToOrtho(false, width, height);
+        //JG.camera.position.set(width, height/2, 0);
+
+
+    }
+
+    @Override
     public void render(float delta) {
         if (Gdx.input.justTouched()) {
-            touch.set(Gdx.input.getX(), Gdx.input.getY(), 0);
-            JG.camera.unproject(touch);
-            if (buttonPause.hit(touch.x, touch.y)) {
-                pause();
+            JG.touch.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+            JG.camera.unproject(JG.touch);
+            if (buttonPause.hit(JG.touch.x, JG.touch.y)) {
+                //pause();
+                JG.setScreen(JG.worldsMenu);
             }
         }
         ScreenUtils.clear(0,0,0,1);
@@ -124,7 +125,5 @@ public class level2 implements Screen{
     @Override
     public void dispose() {
         world.dispose();
-        debugRenderer.dispose();
-        batch.dispose();
     }
 }
