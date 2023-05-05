@@ -36,12 +36,14 @@ public class SensorBox {
         world.setContactListener(new ContactListener() {
             @Override
             public void beginContact(Contact contact) {
+
                 Fixture fixtureA = contact.getFixtureA(); // это область, в которую попадает шар
                 Fixture fixtureB = contact.getFixtureB();
                 Body bodyA = fixtureA.getBody();
                 Body bodyB = fixtureB.getBody(); // это тело шара, который попадает в область
 
                 if (fixtureA.isSensor()) {
+
                     switch ((String) fixtureA.getUserData()) {
                         case "Left":
                             bodyB.applyLinearImpulse(-0.3f, 0, bodyB.getPosition().x, bodyB.getPosition().y, true);
@@ -55,8 +57,14 @@ public class SensorBox {
                         case "Down":
                             bodyB.applyLinearImpulse(0, -1f, bodyB.getPosition().x, bodyB.getPosition().y, true);
                             break;
-                        case "Destroy":
-                            world.destroyBody(bodyB);
+                    }
+                }if (fixtureB.isSensor()){
+                    switch ((String) fixtureB.getUserData()) {
+                        case "Dead":
+                            System.out.println("dead");
+                            break;
+                        case "Win":
+                            System.out.println("win");
                             break;
                     }
                 }

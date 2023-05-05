@@ -15,7 +15,9 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.game.JavaGame;
 import com.mygdx.game.objects.Ball;
 import com.mygdx.game.objects.Box;
+import com.mygdx.game.objects.Ellipse;
 import com.mygdx.game.objects.Gear;
+import com.mygdx.game.objects.SensorBox;
 import com.mygdx.game.objects.Swing;
 import com.mygdx.game.objects.Triangle;
 import com.mygdx.game.objects.Wall;
@@ -37,6 +39,8 @@ public class level2 implements Screen{
     Gear gear;
     Swing swing;
     Box box;
+    Ellipse ellipse;
+    SensorBox sensorDead;
 
     public level2(JavaGame context) {
 
@@ -57,7 +61,10 @@ public class level2 implements Screen{
 
         gear = new Gear(world, 0, 7.5f, 4, true, 0.3f, -10, 50 , 50);
 
-        ball = new Ball(world, 1.5f, 3, 0.5f, true);
+        ellipse = new Ellipse(world, 1.5f, 3, true);
+        sensorDead = new SensorBox(world, 8, 2f, 5f, 0.5f, ellipse.ovalBody, "Dead");
+
+
 
 
         ballLeft = new Ball(world, 1f, 0.75f, 0.4f, false);
@@ -81,13 +88,13 @@ public class level2 implements Screen{
             JG.touch.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             JG.camera.unproject(JG.touch);
             if (ballLeft.hit(JG.touch.x, JG.touch.y)) {
-                ball.body.setLinearVelocity(-5, 0);
+                ellipse.ovalBody.setLinearVelocity(-5, 0);
             }
             if (ballRight.hit(JG.touch.x, JG.touch.y)) {
-                ball.body.setLinearVelocity(5, 0);
+                ellipse.ovalBody.setLinearVelocity(5, 0);
             }
             if (ballUp.hit(JG.touch.x, JG.touch.y)) {
-                ball.body.applyForceToCenter(0, 10, true);
+                ellipse.ovalBody.applyForceToCenter(0, 10, true);
             }
         }
         if (Gdx.input.justTouched()) {

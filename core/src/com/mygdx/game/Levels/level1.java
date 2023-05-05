@@ -15,7 +15,9 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.game.JavaGame;
 import com.mygdx.game.objects.Ball;
 import com.mygdx.game.objects.Box;
+import com.mygdx.game.objects.Ellipse;
 import com.mygdx.game.objects.Gear;
+import com.mygdx.game.objects.SensorBox;
 import com.mygdx.game.objects.Swing;
 import com.mygdx.game.objects.Triangle;
 import com.mygdx.game.objects.Wall;
@@ -37,6 +39,8 @@ public class level1 implements Screen{
     Gear gear;
     Swing swing;
     Box box;
+    Ellipse ellipse;
+    SensorBox sensorDead;
 
     public level1(JavaGame context) {
 
@@ -54,11 +58,14 @@ public class level1 implements Screen{
         box = new Box(world, new float[]{0, 1.5f, 3, 1.5f, 3, 6.5f, 0, 6.5f}, false);
         box = new Box(world, new float[]{13, 1.5f, 16, 1.5f, 13, 5.5f, 16, 4.5f}, false);
 
-        ball = new Ball(world, 1.5f, 7, 0.5f, true);
+        //ball = new Ball(world, 1.5f, 7, 0.5f, true);
+        ellipse = new Ellipse(world, 1.5f, 7, true);
 
         for (int i = 1; i < 11; i++) {
             triangle = new Triangle(world, 2+i, 1.5f, new float[] {0, 0, 1, 0, 0.5f, 1});
         }
+        sensorDead = new SensorBox(world, 8, 2f, 5f, 0.5f, ellipse.ovalBody, "Dead");
+
         ballLeft = new Ball(world, 1f, 0.75f, 0.4f, false);
         ballRight = new Ball(world, 2.5f, 0.75f, 0.4f, false);
         ballUp = new Ball(world, 14.5f, 0.75f, 0.4f, false);
@@ -87,13 +94,13 @@ public class level1 implements Screen{
             JG.touch.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             JG.camera.unproject(JG.touch);
             if (ballLeft.hit(JG.touch.x, JG.touch.y)) {
-                ball.body.setLinearVelocity(-5, 0);
+                ellipse.ovalBody.setLinearVelocity(-5, 0);
             }
             if (ballRight.hit(JG.touch.x, JG.touch.y)) {
-                ball.body.setLinearVelocity(5, 0);
+                ellipse.ovalBody.setLinearVelocity(5, 0);
             }
             if (ballUp.hit(JG.touch.x, JG.touch.y)) {
-                ball.body.applyForceToCenter(0, 10, true);
+                ellipse.ovalBody.applyForceToCenter(0, 10, true);
             }
         }
         ScreenUtils.clear(0,0,0,1);

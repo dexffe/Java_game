@@ -15,7 +15,9 @@ import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.game.JavaGame;
 import com.mygdx.game.objects.Ball;
 import com.mygdx.game.objects.Box;
+import com.mygdx.game.objects.Ellipse;
 import com.mygdx.game.objects.Gear;
+import com.mygdx.game.objects.SensorBox;
 import com.mygdx.game.objects.Swing;
 import com.mygdx.game.objects.Triangle;
 import com.mygdx.game.objects.Wall;
@@ -37,6 +39,8 @@ public class level3 implements Screen{
     Gear gear;
     Swing swing;
     Box box;
+    SensorBox sensorDead;
+    Ellipse ellipse;
 
     public level3(JavaGame context) {
         world = new World(new Vector2(0, -10), false);
@@ -51,11 +55,13 @@ public class level3 implements Screen{
         floor = new Wall(world, width/2, 1.5f, 16, 0);
 
         box = new Box(world, new float[]{0, 1.5f, 2f, 1.5f, 2.5f, 4, 0, 4.5f}, false);
+        ellipse = new Ellipse(world, 1f, 5, true);
+        sensorDead = new SensorBox(world, 8, 8.5f, 8f, 0.5f, ellipse.ovalBody, "Dead");
 
         gear = new Gear(world, 0, 4.5f, 3, true, 0.6f, -10, 50 , 50);
         gear = new Gear(world, 0, 9f, 3.5f, true, 1f, 10, 50 , 50);
 
-        ball = new Ball(world, 1f, 5, 0.5f, true);
+
 
         for (int i = 0; i < 15; i++) {
             if (i % 2 == 0) triangle = new Triangle(world, i, 8f, new float[] {0, 1, 1.5f, 1, 0.75f, 0});
@@ -83,13 +89,13 @@ public class level3 implements Screen{
             JG.touch.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             JG.camera.unproject(JG.touch);
             if (ballLeft.hit(JG.touch.x, JG.touch.y)) {
-                ball.body.setLinearVelocity(-5, 0);
+                ellipse.ovalBody.setLinearVelocity(-5, 0);
             }
             if (ballRight.hit(JG.touch.x, JG.touch.y)) {
-                ball.body.setLinearVelocity(5, 0);
+                ellipse.ovalBody.setLinearVelocity(5, 0);
             }
             if (ballUp.hit(JG.touch.x, JG.touch.y)) {
-                ball.body.applyForceToCenter(0, 10, true);
+                ellipse.ovalBody.applyForceToCenter(0, 10, true);
             }
         }
         if (Gdx.input.justTouched()) {
