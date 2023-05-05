@@ -14,13 +14,13 @@ import com.badlogic.gdx.physics.box2d.World;
 
 
 
-public class ImpulseBox{
+public class SensorBox {
 
     PolygonShape sensorShape;
     FixtureDef sensorFixtureDef;
     Body sensorBody;
 
-    public ImpulseBox(World world, float x, float y, float h, float w, Body body, String course){
+    public SensorBox(final World world, float x, float y, float h, float w, final Body body, String course){
 
         sensorShape = new PolygonShape();
         sensorShape.setAsBox(h, w, new Vector2(x, y), 0); // установка размеров квадрата
@@ -36,12 +36,14 @@ public class ImpulseBox{
         world.setContactListener(new ContactListener() {
             @Override
             public void beginContact(Contact contact) {
+
                 Fixture fixtureA = contact.getFixtureA(); // это область, в которую попадает шар
                 Fixture fixtureB = contact.getFixtureB();
-                //Body bodyA = fixtureA.getBody();
+                Body bodyA = fixtureA.getBody();
                 Body bodyB = fixtureB.getBody(); // это тело шара, который попадает в область
 
                 if (fixtureA.isSensor()) {
+
                     switch ((String) fixtureA.getUserData()) {
                         case "Left":
                             bodyB.applyLinearImpulse(-0.3f, 0, bodyB.getPosition().x, bodyB.getPosition().y, true);
@@ -54,6 +56,15 @@ public class ImpulseBox{
                             break;
                         case "Down":
                             bodyB.applyLinearImpulse(0, -1f, bodyB.getPosition().x, bodyB.getPosition().y, true);
+                            break;
+                    }
+                }if (fixtureB.isSensor()){
+                    switch ((String) fixtureB.getUserData()) {
+                        case "Dead":
+                            System.out.println("dead");
+                            break;
+                        case "Win":
+                            System.out.println("win");
                             break;
                     }
                 }
