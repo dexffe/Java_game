@@ -33,7 +33,7 @@ public class level2 implements Screen{
 
     Triangle triangle;
     Wall floor;
-    Ball ball, buttonPause;
+    Ball ball, buttonPause, ballLeft, ballRight, ballUp;
     Gear gear;
     Swing swing;
     Box box;
@@ -60,9 +60,9 @@ public class level2 implements Screen{
         ball = new Ball(world, 1.5f, 3, 0.5f, true);
 
 
-        ball = new Ball(world, 1f, 0.75f, 0.4f, false);
-        ball = new Ball(world, 2.5f, 0.75f, 0.4f, false);
-        ball = new Ball(world, 14.5f, 0.75f, 0.4f, false);
+        ballLeft = new Ball(world, 1f, 0.75f, 0.4f, false);
+        ballRight = new Ball(world, 2.5f, 0.75f, 0.4f, false);
+        ballUp = new Ball(world, 14.5f, 0.75f, 0.4f, false);
 
         buttonPause = new Ball(world, 15.5f, 8.5f, 0.3f, false);
     }
@@ -77,6 +77,19 @@ public class level2 implements Screen{
 
     @Override
     public void render(float delta) {
+        if (Gdx.input.isTouched()) {
+            JG.touch.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+            JG.camera.unproject(JG.touch);
+            if (ballLeft.hit(JG.touch.x, JG.touch.y)) {
+                ball.body.setLinearVelocity(-5, 0);
+            }
+            if (ballRight.hit(JG.touch.x, JG.touch.y)) {
+                ball.body.setLinearVelocity(5, 0);
+            }
+            if (ballUp.hit(JG.touch.x, JG.touch.y)) {
+                ball.body.applyForceToCenter(0, 10, true);
+            }
+        }
         if (Gdx.input.justTouched()) {
             JG.touch.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             JG.camera.unproject(JG.touch);
