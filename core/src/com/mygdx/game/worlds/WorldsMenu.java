@@ -31,7 +31,7 @@ import java.util.Map;
 public class WorldsMenu  implements Screen {
     JavaGame JG;
 
-    Texture textureGoIntroInSettings;
+    Texture textureGoIntroInSettings, tBg;
     Texture textureLevelInIntro, textureSettingsInIntro, textureAboutInIntro;
     Texture textureIntroInLevel, textureLevel1InLevel, textureLevel2InLevel, textureLevel3InLevel;
 
@@ -94,6 +94,7 @@ public class WorldsMenu  implements Screen {
 
         //Intro objects
         x = 16;
+        tBg = new Texture("background.png");
         textureSettingsInIntro = new Texture(Gdx.files.internal("settings.png"));
         textureLevelInIntro = new Texture(Gdx.files.internal("start.png"));
         textureAboutInIntro = new Texture(Gdx.files.internal("skelet.png"));
@@ -307,6 +308,11 @@ public class WorldsMenu  implements Screen {
 
 
         }
+        JG.batch.draw(tBg,0,0, w/3, h);
+        JG.batch.draw(tBg,w/3, 0, w/3, h);
+        JG.batch.draw(tBg,w/3+ w/3, 0, w/3, h);
+
+
         for (Texture i : ListTextureBall.keySet()) {
             JG.batch.draw(i,
                     ListTextureBall.get(i).body.getPosition().x- ListTextureBall.get(i).r,
