@@ -46,7 +46,7 @@ public class SensorBox {
 
                     switch ((String) fixtureA.getUserData()) {
                         case "Left":
-                            bodyB.applyLinearImpulse(-0.3f, 0, bodyB.getPosition().x, bodyB.getPosition().y, true);
+                            bodyB.applyLinearImpulse(-0.2f, 0, bodyB.getPosition().x, bodyB.getPosition().y, true);
                             break;
                         case "Right":
                             bodyB.applyLinearImpulse(0.3f, 0, bodyB.getPosition().x, bodyB.getPosition().y, true);

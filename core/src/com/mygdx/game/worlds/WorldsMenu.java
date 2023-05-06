@@ -15,6 +15,7 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.joints.WeldJointDef;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.mygdx.game.JavaGame;
 import com.mygdx.game.objects.Arc;
 import com.mygdx.game.objects.Ball;
@@ -58,9 +59,12 @@ public class WorldsMenu  implements Screen {
     SensorBox impulseBox, destroyBox;
     float x;
     float speed;
-    boolean goScreen;
+    boolean goScreen, isObjDeleted;
     String fromScreen, toScreen;
     float w, h;
+    long timeLastCreateBox, timeCreateBoxInterval = 27700; //27500
+
+
 
 
 
@@ -81,9 +85,21 @@ public class WorldsMenu  implements Screen {
         floor = new Wall(world, 0, 4.5f, 0f, 9);
         floor = new Wall(world, 1, 4.2f, 0f, 3.2f);
         ballGoIntroInSettings = new Ball(world, 3, 7, 0.4f, false);
-        ball = new Ball(world, 5f, 1.3f, 0.2f, true);
-        ball = new Ball(world, 5f, 1.7f, 0.2f, true);
-        ball = new Ball(world, 5f, 2.1f, 0.2f, true);
+
+        ball = new Ball(world, 7.2f, 0.5f, 0.2f, true);
+        ball.body.setLinearVelocity(-4, 0);
+        ball = new Ball(world, 7.6f, 0.5f, 0.2f, true);
+        ball.body.setLinearVelocity(-4, 0);
+        ball = new Ball(world, 8f, 0.5f, 0.2f, true);
+        ball.body.setLinearVelocity(-4, 0);
+
+        //ball = new Ball(world, 7.1f, 0.5f, 0.2f, true);
+        //ball.body.setLinearVelocity(-4, 0);
+        //ball = new Ball(world, 7.7f, 0.5f, 0.2f, true);
+        //ball.body.setLinearVelocity(-4, 0);
+        //ball = new Ball(world, 8f, 0.5f, 0.2f, true);
+        //ball.body.setLinearVelocity(-4, 0);
+
         arc = new Arc(world, 1.7f, 7.3f, 10, 1.7f, 3f, 0.7f);
         arc = new Arc(world, 1f, 8f, 10, 1.7f, 3f, 1f);
         arc = new Arc(world, 1f, 1f, 10, -1.7f, -3f, 1f);
@@ -143,7 +159,7 @@ public class WorldsMenu  implements Screen {
         floor = new Wall(world, 8+x, 0, 16, 0f);
         floor = new Wall(world, 8+x, 9, 16, 0f);
         floor = new Wall(world, 16+x, 4.5f, 0f, 9);
-        impulseBox = new SensorBox(world, 5+x, 0.5f, 2.5f, 0.5f, ball.body, "Left");
+        //impulseBox = new SensorBox(world, 6+x, 0.5f, 2.5f, 0.5f, ball.body, "Left");
         buttonIntroInLevel = new Ball(world, 15+x, 1, 0.5f, false);
         buttonLevel1InLevel = new Ball(world, 2+x, 3, 0.5f, false);
         buttonLevel2InLevel = new Ball(world, 4+x, 3, 0.5f, false);
@@ -165,53 +181,45 @@ public class WorldsMenu  implements Screen {
 
     @Override
     public void show() {
-        JG.camera.position.set(w /2f, h/2, 0);
+        JG.camera.position.set(w /6f, h/2, 0);
+        timeLastCreateBox = TimeUtils.millis();
     }
 
     @Override
     public void render(float delta) {
-        /*final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+        if (timeLastCreateBox + timeCreateBoxInterval < TimeUtils.millis() && !isObjDeleted) {
+            world.destroyBody(box1.body);
+            world.destroyBody(box2.body);
+            world.destroyBody(box3.body);
+            isObjDeleted = true;
+        }
 
-        final Runnable runnable = new Runnable() {
-            int countdownStarter = 5;  //27
+        if (timeLastCreateBox + timeCreateBoxInterval + 5600  < TimeUtils.millis()) {
+            isObjDeleted = false;
+            timeLastCreateBox = TimeUtils.millis();
+            x = 16;
+            box1 = new Box(world, new float[]{0.8f + x - 0.5f, 7.5f, 0.8f + x - 0.5f, 7f, 3.8f + x - 0.5f, 7f, 3.8f + x - 0.5f, 7.5f}, true);
+            box2 = new Box(world, new float[]{0.8f + x - 0.5f, 8f, 0.8f + x - 0.5f, 7f, 0.8f + x, 7f, 0.8f + x, 8f}, true);
+            box3 = new Box(world, new float[]{3.3f + x - 0.5f, 8f, 3.3f + x - 0.5f, 7f, 3.3f + x, 7f, 3.3f + x, 8f}, true);
+            //world.destroyBody(box1.body);
 
-            public void run() {
-                //System.out.println(countdownStarter);
-                countdownStarter--;
+            WeldJointDef rjd = new WeldJointDef();
+            rjd.collideConnected = false;
+            rjd.bodyA = box1.body;
+            rjd.bodyB = box2.body;
+            rjd.localAnchorA.set(box1.body.getPosition().x, box1.body.getPosition().y);
+            rjd.localAnchorB.set(box2.body.getPosition().x, box2.body.getPosition().y);
+            world.createJoint(rjd);
 
+            WeldJointDef rjd1 = new WeldJointDef();
+            rjd1.collideConnected = false;
+            rjd1.bodyA = box1.body;
+            rjd1.bodyB = box3.body;
+            rjd1.localAnchorA.set(box1.body.getPosition().x, box1.body.getPosition().y);
+            rjd1.localAnchorB.set(box3.body.getPosition().x, box3.body.getPosition().y);
+            world.createJoint(rjd1);
+        }
 
-                if (countdownStarter < 0) {
-                    System.out.println("over");
-                    x = 16;
-                    countdownStarter = 27;
-                    world.destroyBody(box1.body);
-                    world.destroyBody(box2.body);
-                    world.destroyBody(box3.body);
-                    box1 = new Box(world, new float[]{0.8f+x-0.5f, 7.5f, 0.8f+x-0.5f, 7f, 3.8f+x-0.5f, 7f, 3.8f+x-0.5f, 7.5f}, true);
-                    box2 = new Box(world, new float[]{0.8f+x-0.5f, 8f, 0.8f+x-0.5f, 7f, 0.8f+x, 7f, 0.8f+x, 8f}, true);
-                    box3 = new Box(world, new float[]{3.3f+x-0.5f, 8f, 3.3f+x-0.5f, 7f, 3.3f+x, 7f, 3.3f+x, 8f}, true);
-                    //world.destroyBody(box1.body);
-
-                    WeldJointDef rjd = new WeldJointDef();
-                    rjd.collideConnected = false;
-                    rjd.bodyA = box1.body;
-                    rjd.bodyB = box2.body;
-                    rjd.localAnchorA.set(box1.body.getPosition().x, box1.body.getPosition().y);
-                    rjd.localAnchorB.set(box2.body.getPosition().x, box2.body.getPosition().y);
-                    world.createJoint(rjd);
-
-                    WeldJointDef rjd1 = new WeldJointDef();
-                    rjd1.collideConnected = false;
-                    rjd1.bodyA = box1.body;
-                    rjd1.bodyB = box3.body;
-                    rjd1.localAnchorA.set(box1.body.getPosition().x, box1.body.getPosition().y);
-                    rjd1.localAnchorB.set(box3.body.getPosition().x, box3.body.getPosition().y);
-                    world.createJoint(rjd1);
-                    scheduler.shutdown();
-                }
-            }
-        };
-        scheduler.scheduleAtFixedRate(runnable, 0, 1, SECONDS);*/
 
 
         ScreenUtils.clear(0,0,0,1);
@@ -261,6 +269,9 @@ public class WorldsMenu  implements Screen {
         // Отрисовываем спрайт
         JG.batch.setProjectionMatrix(JG.camera.combined);
         JG.batch.begin();
+        //JG.batch.draw(tBg,0,0, w/3, h);
+        //JG.batch.draw(tBg,w/3, 0, w/3, h);
+        //JG.batch.draw(tBg,w/3+ w/3, 0, w/3, h);
         if (Gdx.input.justTouched()) {
             touch.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             JG.camera.unproject(touch);
@@ -308,9 +319,7 @@ public class WorldsMenu  implements Screen {
 
 
         }
-        JG.batch.draw(tBg,0,0, w/3, h);
-        JG.batch.draw(tBg,w/3, 0, w/3, h);
-        JG.batch.draw(tBg,w/3+ w/3, 0, w/3, h);
+
 
 
         for (Texture i : ListTextureBall.keySet()) {
