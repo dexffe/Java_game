@@ -40,8 +40,7 @@ public class level1 implements Screen{
     Swing swing;
     Box box;
     Ellipse ellipse;
-    SensorBox sensorDead;
-
+    SensorBox sensorDead;;
     public level1(JavaGame context) {
 
         world = new World(new Vector2(0, -10), false);
@@ -91,6 +90,7 @@ public class level1 implements Screen{
             }
         }
         if (Gdx.input.isTouched()) {
+
             JG.touch.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             JG.camera.unproject(JG.touch);
             if (ballLeft.hit(JG.touch.x, JG.touch.y)) {
@@ -98,6 +98,7 @@ public class level1 implements Screen{
             }
             if (ballRight.hit(JG.touch.x, JG.touch.y)) {
                 ellipse.ovalBody.setLinearVelocity(5, 0);
+
             }
             if (ballUp.hit(JG.touch.x, JG.touch.y)) {
                 ellipse.ovalBody.applyForceToCenter(0, 10, true);
