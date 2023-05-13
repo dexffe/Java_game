@@ -32,7 +32,9 @@ import java.util.Map;
 public class WorldsMenu  implements Screen {
     JavaGame JG;
 
-    Texture textureGoIntroInSettings, tBg, tGearsPeace, tGearsBody;
+    Texture textureGoIntroInSettings;
+    Texture tBg, tGearsPeace, tGearsBody, tBall, t1Box200x300,t1Box300x200;
+
     Texture textureLevelInIntro, textureSettingsInIntro, textureAboutInIntro;
     Texture textureIntroInLevel, textureLevel1InLevel, textureLevel2InLevel, textureLevel3InLevel;
 
@@ -48,7 +50,7 @@ public class WorldsMenu  implements Screen {
 
     Triangle triangle;
     Wall floor;
-    public Ball ballGoIntroInSettings, ball, ball1;
+    public Ball ballGoIntroInSettings, ball1, ball2, ball3;
     public Ball buttonSettingsInIntro, buttonLevelInIntro, buttonAboutInIntro;
     public Ball buttonIntroInLevel, buttonLevel1InLevel, buttonLevel2InLevel, buttonLevel3InLevel;
     Gear gear;
@@ -86,12 +88,12 @@ public class WorldsMenu  implements Screen {
         floor = new Wall(world, 1, 4.2f, 0f, 3.2f);
         ballGoIntroInSettings = new Ball(world, 3, 7, 0.4f, false);
 
-        ball = new Ball(world, 7.2f, 0.5f, 0.2f, true);
-        ball.body.setLinearVelocity(-4, 0);
-        ball = new Ball(world, 7.6f, 0.5f, 0.2f, true);
-        ball.body.setLinearVelocity(-4, 0);
-        ball = new Ball(world, 8f, 0.5f, 0.2f, true);
-        ball.body.setLinearVelocity(-4, 0);
+        ball1 = new Ball(world, 7.2f, 0.5f, 0.2f, true);
+        ball1.body.setLinearVelocity(-4, 0);
+        ball2 = new Ball(world, 7.6f, 0.5f, 0.2f, true);
+        ball2.body.setLinearVelocity(-4, 0);
+        ball3 = new Ball(world, 8f, 0.5f, 0.2f, true);
+        ball3.body.setLinearVelocity(-4, 0);
 
         //ball = new Ball(world, 7.1f, 0.5f, 0.2f, true);
         //ball.body.setLinearVelocity(-4, 0);
@@ -103,9 +105,9 @@ public class WorldsMenu  implements Screen {
         arc = new Arc(world, 1.7f, 7.3f, 10, 1.7f, 3f, 0.7f);
         arc = new Arc(world, 1f, 8f, 10, 1.7f, 3f, 1f);
         arc = new Arc(world, 1f, 1f, 10, -1.7f, -3f, 1f);
-        impulseBox = new SensorBox(world, 5, 0.5f, 2.5f, 0.5f, ball.body, "Left");
-        impulseBox = new SensorBox(world, 5, 8.5f, 2.5f, 0.5f, ball.body, "Right");
-        impulseBox = new SensorBox(world, 0f, 0.5f, 0.3f, 2.5f, ball.body, "Up");
+        impulseBox = new SensorBox(world, 5, 0.5f, 2.5f, 0.5f, ball1.body, "Left");
+        impulseBox = new SensorBox(world, 5, 8.5f, 2.5f, 0.5f, ball1.body, "Right");
+        impulseBox = new SensorBox(world, 0f, 0.5f, 0.3f, 2.5f, ball1.body, "Up");
         ListTextureBall.put(textureGoIntroInSettings, ballGoIntroInSettings);
 
         //Intro objects
@@ -116,6 +118,9 @@ public class WorldsMenu  implements Screen {
         textureAboutInIntro = new Texture(Gdx.files.internal("skelet.png"));
         tGearsBody = new Texture("gearsBody.png");
         tGearsPeace = new Texture("gearsPeace.png");
+        tBall = new Texture("Ball.png");
+        t1Box200x300 = new Texture("1box200x300.png");
+        t1Box300x200 = new Texture("1box300x200.png");
         floor = new Wall(world, 8+x, 0, 16, 0f);
         floor = new Wall(world, 8+x, 9, 16, 0f);
         floor = new Wall(world, 2+x, 8, 4, 0f);
@@ -271,11 +276,22 @@ public class WorldsMenu  implements Screen {
         // Отрисовываем спрайт
         JG.batch.setProjectionMatrix(JG.camera.combined);
         JG.batch.begin();
-        JG.batch.draw(textureIntroInLevel,
-                ball.body.getPosition().x- ball.r,
-                ball.body.getPosition().y- ball.r,
-                0, ball.r*2, ball.r*2, ball.r*2,
-                1,1,0,0,0,100,100,false,false);
+        JG.batch.draw(tBall,
+                ball1.body.getPosition().x- ball1.r,
+                ball1.body.getPosition().y- ball1.r,
+                0, ball1.r*2, ball1.r*2, ball1.r*2,
+                1,1,0,0,0,200,200,false,false);
+        JG.batch.draw(tBall,
+                ball2.body.getPosition().x- ball2.r,
+                ball2.body.getPosition().y- ball2.r,
+                0, ball2.r*2, ball2.r*2, ball2.r*2,
+                1,1,0,0,0,200,200,false,false);
+        JG.batch.draw(tBall,
+                ball3.body.getPosition().x- ball3.r,
+                ball3.body.getPosition().y- ball3.r,
+                0, ball3.r*2, ball3.r*2, ball3.r*2,
+                1,1,0,0,0,200,200,false,false);
+
         //JG.batch.draw(tBg,0,0, w/3, h);
         //JG.batch.draw(tBg,w/3, 0, w/3, h);
         //JG.batch.draw(tBg,w/3+ w/3, 0, w/3, h);

@@ -8,6 +8,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -27,6 +28,7 @@ public class level3 implements Screen{
     boolean pause;
 
     Texture texturePause;
+    Texture tWatermelon;
     Sprite sprite;
     SpriteBatch batch;
     TextButton btnPlay, btnSettings, btnExit;
@@ -46,6 +48,7 @@ public class level3 implements Screen{
         world = new World(new Vector2(0, -10), false);
         JG = context;
         texturePause = new Texture(Gdx.files.internal("pause.png"));
+        tWatermelon = new Texture("watermelon.png");
 
         floor = new Wall(world, width/2, height, 16, 0f);
         floor = new Wall(world, width/2, 0, 16, 0f);
@@ -115,11 +118,16 @@ public class level3 implements Screen{
         // Отрисовываем спрайт
         JG.batch.setProjectionMatrix(JG.camera.combined);
         JG.batch.begin();
-        JG.batch.draw(texturePause,
+        JG.batch.draw(tWatermelon,
                 buttonPause.body.getPosition().x- buttonPause.r,
                 buttonPause.body.getPosition().y- buttonPause.r,
                 0, buttonPause.r*2, buttonPause.r*2, buttonPause.r*2,
                 1,1,0,0,0,100,100,false,false);
+        JG.batch.draw(texturePause,
+              ellipse.ovalBody.getPosition().x- 0.4f,
+             ellipse.ovalBody.getPosition().y- 0.3f,
+           0.4f, 0.3f, 0.4f*2, 0.3f*2,
+           1,1,ellipse.ovalBody.getAngle()* MathUtils.radiansToDegrees,0,0,150,120,false,false);
         JG.batch.end();
     }
 
