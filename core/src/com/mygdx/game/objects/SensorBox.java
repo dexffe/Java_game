@@ -60,10 +60,10 @@ public class SensorBox {
                 }if (fixtureB.isSensor()){
                     switch ((String) fixtureB.getUserData()) {
                         case "Dead":
-                            world.destroyBody(body);
+                            System.out.println("Dead");
                             break;
                         case "Win":
-                            System.out.println("win");
+                            System.out.println("Win");
                             break;
                     }
                 }

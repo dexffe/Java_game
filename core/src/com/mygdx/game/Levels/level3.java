@@ -27,7 +27,7 @@ public class level3 implements Screen{
     JavaGame JG;
     boolean pause;
 
-    Texture texturePause;
+    Texture texturePause, tGearsBody;
     Texture tWatermelon;
     Sprite sprite;
     SpriteBatch batch;
@@ -38,7 +38,7 @@ public class level3 implements Screen{
     Triangle triangle;
     Wall floor;
     Ball ball, buttonPause, ballLeft, ballRight, ballUp;
-    Gear gear;
+    Gear gear, gear1;
     Swing swing;
     Box box;
     SensorBox sensorDead;
@@ -62,7 +62,7 @@ public class level3 implements Screen{
         sensorDead = new SensorBox(world, 8, 8.5f, 8f, 0.5f, ellipse.ovalBody, "Dead");
 
         gear = new Gear(world, 0, 4.5f, 3, true, 0.6f, -10, 50 , 50);
-        gear = new Gear(world, 0, 9f, 3.5f, true, 1f, 10, 50 , 50);
+        gear1 = new Gear(world, 0, 9f, 3.5f, true, 1f, 10, 50 , 50);
 
 
 
@@ -76,6 +76,7 @@ public class level3 implements Screen{
         ballUp = new Ball(world, 14.5f, 0.75f, 0.4f, false);
 
         buttonPause = new Ball(world, 15.5f, 8.5f, 0.3f, false);
+        tGearsBody = new Texture("gear.png");
     }
 
     @Override
@@ -111,13 +112,16 @@ public class level3 implements Screen{
         }
         ScreenUtils.clear(0,0,0,1);
         if (!pause)world.step(1/60f,6,2);
-        //JG.camera.update();
-        JG.debugRenderer.render(world,JG.camera.combined);
+        //JG.debugRenderer.render(world,JG.camera.combined);
 
 
         // Отрисовываем спрайт
         JG.batch.setProjectionMatrix(JG.camera.combined);
         JG.batch.begin();
+        JG.batch.draw(tGearsBody, gear.basis.getPosition().x*2 - gear.res/2, gear.basis.getPosition().y*2 - gear.res/2,
+                gear.res/2,gear.res/2, gear.res,gear.res, 3f,3f, gear.box.getAngle()* MathUtils.radiansToDegrees, 0,0, 500,500, false,false);
+        JG.batch.draw(tGearsBody, gear1.basis.getPosition().x*2 - gear1.res/2, gear1.basis.getPosition().y*2 - gear1.res/2,
+                gear1.res/2,gear1.res/2, gear1.res,gear1.res, 3f,3f, gear1.box.getAngle()* MathUtils.radiansToDegrees, 0,0, 500,500, false,false);
         JG.batch.draw(texturePause,
                 buttonPause.body.getPosition().x- buttonPause.r,
                 buttonPause.body.getPosition().y- buttonPause.r,

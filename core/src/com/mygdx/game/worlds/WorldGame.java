@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
@@ -20,7 +21,7 @@ public class WorldGame implements Screen {
     float w = 16;
     public static float h = 9;
 
-    Texture texturePause;
+    Texture texturePause, tGearsBody;
     Box2DDebugRenderer debugRenderer;
     OrthographicCamera camera;
     Sprite sprite;
@@ -70,10 +71,12 @@ public class WorldGame implements Screen {
         triangle = new Triangle(world, 1.5f, 4.5f, new float[] {0f, 1, 1, 0, 0, 0});
         triangle = new Triangle(world, 13f, 4.5f, new float[] {1, 1, 1, 0, 0, 0});
 
-        gear = new Gear(world, 0f, 3, 3, true, 0.7f, 13, 35, 50);
-        gear = new Gear(world, 0f, 13, 3, true, 0.7f, -13, 35 , 50);
+        gear = new Gear(world, 0f, 3, 3, true, 0.7f, 5, 35, 50);
+        gear = new Gear(world, 0f, 13, 3, true, 0.7f, -5, 35 , 50);
 
         buttonPause = new Ball(world, 15.5f, 8.5f, 0.3f, false);
+        tGearsBody = new Texture("gear.png");
+
     }
 
     @Override
@@ -94,6 +97,8 @@ public class WorldGame implements Screen {
         // Отрисовываем спрайт
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
+        batch.draw(tGearsBody, gear.basis.getPosition().x*2 - gear.res/2, gear.basis.getPosition().y*2 - gear.res/2,
+                gear.res/2,gear.res/2, gear.res,gear.res, 3f,3f, gear.box.getAngle()* MathUtils.radiansToDegrees, 0,0, 500,500, false,false);
         batch.draw(texturePause,
                 buttonPause.body.getPosition().x- buttonPause.r,
                 buttonPause.body.getPosition().y- buttonPause.r,
