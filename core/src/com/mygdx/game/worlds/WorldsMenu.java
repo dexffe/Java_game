@@ -32,7 +32,7 @@ import java.util.Map;
 public class WorldsMenu  implements Screen {
     JavaGame JG;
 
-    Texture textureGoIntroInSettings, tBg;
+    Texture textureGoIntroInSettings, tBg, tGearsPeace, tGearsBody;
     Texture textureLevelInIntro, textureSettingsInIntro, textureAboutInIntro;
     Texture textureIntroInLevel, textureLevel1InLevel, textureLevel2InLevel, textureLevel3InLevel;
 
@@ -114,6 +114,8 @@ public class WorldsMenu  implements Screen {
         textureSettingsInIntro = new Texture(Gdx.files.internal("settings.png"));
         textureLevelInIntro = new Texture(Gdx.files.internal("start.png"));
         textureAboutInIntro = new Texture(Gdx.files.internal("skelet.png"));
+        tGearsBody = new Texture("gearsBody.png");
+        tGearsPeace = new Texture("gearsPeace.png");
         floor = new Wall(world, 8+x, 0, 16, 0f);
         floor = new Wall(world, 8+x, 9, 16, 0f);
         floor = new Wall(world, 2+x, 8, 4, 0f);
@@ -269,6 +271,11 @@ public class WorldsMenu  implements Screen {
         // Отрисовываем спрайт
         JG.batch.setProjectionMatrix(JG.camera.combined);
         JG.batch.begin();
+        JG.batch.draw(textureIntroInLevel,
+                ball.body.getPosition().x- ball.r,
+                ball.body.getPosition().y- ball.r,
+                0, ball.r*2, ball.r*2, ball.r*2,
+                1,1,0,0,0,100,100,false,false);
         //JG.batch.draw(tBg,0,0, w/3, h);
         //JG.batch.draw(tBg,w/3, 0, w/3, h);
         //JG.batch.draw(tBg,w/3+ w/3, 0, w/3, h);

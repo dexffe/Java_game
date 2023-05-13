@@ -1,5 +1,7 @@
 package com.mygdx.game.objects;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -7,9 +9,13 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.mygdx.game.JavaGame;
 
 public class Ellipse {
     public Body ovalBody;
+   public float radiusX,radiusY;
+    JavaGame JG;
+
     Vector2[] vertices;
     public float r;
     public Ellipse(World world, float x, float y, boolean dynamic){
@@ -22,8 +28,8 @@ public class Ellipse {
         int numSectors = 30;
         float sectorAngle = 2 * MathUtils.PI / numSectors;
 
-        float radiusX = 0.4f;
-        float radiusY = 0.3f;
+        radiusX = 0.4f;
+        radiusY = 0.3f;
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.density = 1.0f;
         fixtureDef.friction = 0.5f;
@@ -39,8 +45,13 @@ public class Ellipse {
             sector.set(vertices);
             fixtureDef.shape = sector;
             ovalBody.createFixture(fixtureDef);
+
         }
 
         //sector.dispose();
     }
+    public void drw(){
+
+    }
+
 }
