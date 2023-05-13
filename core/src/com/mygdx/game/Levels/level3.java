@@ -118,12 +118,12 @@ public class level3 implements Screen{
         // Отрисовываем спрайт
         JG.batch.setProjectionMatrix(JG.camera.combined);
         JG.batch.begin();
-        JG.batch.draw(tWatermelon,
+        JG.batch.draw(texturePause,
                 buttonPause.body.getPosition().x- buttonPause.r,
                 buttonPause.body.getPosition().y- buttonPause.r,
                 0, buttonPause.r*2, buttonPause.r*2, buttonPause.r*2,
                 1,1,0,0,0,100,100,false,false);
-        JG.batch.draw(texturePause,
+        JG.batch.draw(tWatermelon,
               ellipse.ovalBody.getPosition().x- 0.4f,
              ellipse.ovalBody.getPosition().y- 0.3f,
            0.4f, 0.3f, 0.4f*2, 0.3f*2,
