@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
@@ -53,10 +54,10 @@ public class WorldsMenu  implements Screen {
     public Ball ballGoIntroInSettings, ball1, ball2, ball3;
     public Ball buttonSettingsInIntro, buttonLevelInIntro, buttonAboutInIntro;
     public Ball buttonIntroInLevel, buttonLevel1InLevel, buttonLevel2InLevel, buttonLevel3InLevel;
-    Gear gear;
+    Gear[] gear = new Gear[15];
+    Gear[] gear1 = new Gear[12];
     Swing swing;
     Arc arc;
-    Box box;
     Box box1, box2, box3;
     SensorBox impulseBox, destroyBox;
     float x;
@@ -116,7 +117,7 @@ public class WorldsMenu  implements Screen {
         textureSettingsInIntro = new Texture(Gdx.files.internal("settings.png"));
         textureLevelInIntro = new Texture(Gdx.files.internal("start.png"));
         textureAboutInIntro = new Texture(Gdx.files.internal("skelet.png"));
-        tGearsBody = new Texture("gearsBody.png");
+        tGearsBody = new Texture("gear.png");
         tGearsPeace = new Texture("gearsPeace.png");
         tBall = new Texture("Ball.png");
         t1Box200x300 = new Texture("1box200x300.png");
@@ -151,7 +152,7 @@ public class WorldsMenu  implements Screen {
         world.createJoint(rjd1);
 
         for (int i = 1; i < 16; i++) {
-            gear = new Gear(world, 0, i+x, 6, true, 0.3f, -3, 50 , 50);
+            gear[i-1] = new Gear(world, 0, i+x, 6, true, 0.3f, -3, 50 , 50);
         }
         ListTextureBall.put(textureLevelInIntro, buttonLevelInIntro);
         ListTextureBall.put(textureSettingsInIntro, buttonSettingsInIntro);
@@ -174,7 +175,7 @@ public class WorldsMenu  implements Screen {
         float h = 6f;
         float count = 0;
         for (int i = 0; i < 12; i++) {
-            gear = new Gear(world, 0, i+x, h, true, 0.3f, -3, 35 , 50);
+            gear1[i] = new Gear(world, 0, i+x, h, true, 0.3f, -3, 35 , 50);
             if (h != 7f && count >= 4 && count <= 8) h += 0.2f;
             count += 1;
         }
@@ -188,7 +189,7 @@ public class WorldsMenu  implements Screen {
 
     @Override
     public void show() {
-        JG.camera.position.set(w /6f, h/2, 0);
+        JG.camera.position.set(w /2, h/2, 0);
         timeLastCreateBox = TimeUtils.millis();
     }
 
@@ -276,6 +277,9 @@ public class WorldsMenu  implements Screen {
         // Отрисовываем спрайт
         JG.batch.setProjectionMatrix(JG.camera.combined);
         JG.batch.begin();
+        //JG.batch.draw(tBg,w/3, 0, w/3, h);
+        JG.batch.draw(t1Box200x300, box1.body.getPosition().x+16, box1.body.getPosition().y+7,
+                0,1, 1,1, 1f,1f, 0, 0,0, 200,300, false,false);
         JG.batch.draw(tBall,
                 ball1.body.getPosition().x- ball1.r,
                 ball1.body.getPosition().y- ball1.r,
@@ -292,8 +296,24 @@ public class WorldsMenu  implements Screen {
                 0, ball3.r*2, ball3.r*2, ball3.r*2,
                 1,1,0,0,0,200,200,false,false);
 
+
+        for (int i = 0; i < gear.length; i++) {
+            JG.batch.draw(tGearsBody, gear[i].basis.getPosition().x*2 - gear[i].res/2, gear[i].basis.getPosition().y*2 - gear[i].res/2,
+                    gear[i].res/2,gear[i].res/2, gear[i].res,gear[i].res, 3f,3f, gear[i].box.getAngle()* MathUtils.radiansToDegrees, 0,0, 500,500, false,false);
+        }
+        for (int i = 0; i < gear1.length; i++) {
+            JG.batch.draw(tGearsBody, gear1[i].basis.getPosition().x*2 - gear1[i].res/2, gear1[i].basis.getPosition().y*2 - gear1[i].res/2,
+                    gear1[i].res/2,gear1[i].res/2, gear1[i].res,gear1[i].res, 3f,3f, gear1[i].box.getAngle()* MathUtils.radiansToDegrees, 0,0, 500,500, false,false);
+        }
+
+
+        //JG.batch.draw(textureIntroInLevel,
+        //        ball.body.getPosition().x- ball.r,
+        //        ball.body.getPosition().y- ball.r,
+        //        0, ball.r*2, ball.r*2, ball.r*2,
+        //        1,1,0,0,0,100,100,false,false);
         //JG.batch.draw(tBg,0,0, w/3, h);
-        //JG.batch.draw(tBg,w/3, 0, w/3, h);
+
         //JG.batch.draw(tBg,w/3+ w/3, 0, w/3, h);
         if (Gdx.input.justTouched()) {
             touch.set(Gdx.input.getX(), Gdx.input.getY(), 0);

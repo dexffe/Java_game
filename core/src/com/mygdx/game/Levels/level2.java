@@ -27,7 +27,7 @@ public class level2 implements Screen{
     JavaGame JG;
     boolean pause;
 
-    Texture texturePause;
+    Texture texturePause, tGearsBody;
     Texture tWatermelon;
     Sprite sprite;
     SpriteBatch batch;
@@ -75,6 +75,7 @@ public class level2 implements Screen{
         ballUp = new Ball(world, 14.5f, 0.75f, 0.4f, false);
 
         buttonPause = new Ball(world, 15.5f, 8.5f, 0.3f, false);
+        tGearsBody = new Texture("gear.png");
     }
 
     @Override
@@ -117,6 +118,8 @@ public class level2 implements Screen{
         // Отрисовываем спрайт
         JG.batch.setProjectionMatrix(JG.camera.combined);
         JG.batch.begin();
+        JG.batch.draw(tGearsBody, gear.basis.getPosition().x*2 - gear.res/2, gear.basis.getPosition().y*2 - gear.res/2,
+                gear.res/2,gear.res/2, gear.res,gear.res, 3f,3f, gear.box.getAngle()* MathUtils.radiansToDegrees, 0,0, 500,500, false,false);
         JG.batch.draw(texturePause,
                 buttonPause.body.getPosition().x- buttonPause.r,
                 buttonPause.body.getPosition().y- buttonPause.r,

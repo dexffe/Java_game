@@ -11,17 +11,19 @@ import com.badlogic.gdx.physics.box2d.joints.WeldJointDef;
 
 
 public class Gear {
-    Body basis;
+    public Body basis;
 
     // 4 зубца
-    Body box;
+    public Body box;
     Body topTooth;
     Body rightTooth;
     Body botTooth;
     Body leftTooth;
     int PPM;
+    public float res;
 
     public Gear(World world, float rotation, float x, float y, boolean n, float resize, int speed, int hf, int _PPM){
+        res = resize;
         PPM = _PPM;
         x = x / 2f;
         y = y / 2f;
