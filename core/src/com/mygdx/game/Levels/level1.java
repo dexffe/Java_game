@@ -8,6 +8,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -27,6 +28,8 @@ public class level1 implements Screen{
     boolean pause;
 
     Texture texturePause;
+    Texture textureWatermelon;
+
     Sprite sprite;
     SpriteBatch batch;
     TextButton btnPlay, btnSettings, btnExit;
@@ -48,6 +51,7 @@ public class level1 implements Screen{
         System.out.println(width);
 
         texturePause = new Texture(Gdx.files.internal("pause.png"));
+        textureWatermelon = new Texture("watermelon.png");
 
         floor = new Wall(world, width/2, height, 16, 0f);
         floor = new Wall(world, width/2, 0, 16, 0f);
@@ -89,7 +93,21 @@ public class level1 implements Screen{
                 JG.setScreen(JG.worldsMenu);
             }
         }
-        if (Gdx.input.isTouched()) {
+        if (Gdx.input.isTouched(0)) {
+
+            JG.touch.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+            JG.camera.unproject(JG.touch);
+            if (ballLeft.hit(JG.touch.x, JG.touch.y)) {
+                ellipse.ovalBody.setLinearVelocity(-5, 0);
+            }
+            if (ballRight.hit(JG.touch.x, JG.touch.y)) {
+                ellipse.ovalBody.setLinearVelocity(5, 0);
+
+            }
+            if (ballUp.hit(JG.touch.x, JG.touch.y)) {
+                ellipse.ovalBody.applyForceToCenter(0, 10, true);
+            }
+        }if (Gdx.input.isTouched(1)) {
 
             JG.touch.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             JG.camera.unproject(JG.touch);
@@ -108,11 +126,14 @@ public class level1 implements Screen{
         if (!pause)world.step(1/60f,6,2);
         //JG.camera.update();
         JG.debugRenderer.render(world,JG.camera.combined);
-
-
         // Отрисовываем спрайт
         JG.batch.setProjectionMatrix(JG.camera.combined);
         JG.batch.begin();
+        JG.batch.draw(textureWatermelon,
+                ellipse.ovalBody.getPosition().x- 0.4f,
+                ellipse.ovalBody.getPosition().y- 0.3f,
+                0.4f, 0.3f, 0.4f*2, 0.3f*2,
+                1,1,ellipse.ovalBody.getAngle()* MathUtils.radiansToDegrees,0,0,150,120,false,false);
         JG.batch.draw(texturePause,
                 buttonPause.body.getPosition().x- buttonPause.r,
                 buttonPause.body.getPosition().y- buttonPause.r,

@@ -13,7 +13,6 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
 
-
 public class SensorBox {
 
     PolygonShape sensorShape;
@@ -61,7 +60,7 @@ public class SensorBox {
                 }if (fixtureB.isSensor()){
                     switch ((String) fixtureB.getUserData()) {
                         case "Dead":
-                            System.out.println("dead");
+                            world.destroyBody(body);
                             break;
                         case "Win":
                             System.out.println("win");
