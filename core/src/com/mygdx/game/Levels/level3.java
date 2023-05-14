@@ -1,7 +1,7 @@
 package com.mygdx.game.Levels;
 
-import static com.mygdx.game.JavaGame.height;
-import static com.mygdx.game.JavaGame.width;
+import static com.mygdx.game.JavaGame.*;
+
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -10,6 +10,12 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.Contact;
+import com.badlogic.gdx.physics.box2d.ContactImpulse;
+import com.badlogic.gdx.physics.box2d.ContactListener;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.Manifold;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -26,6 +32,8 @@ import com.mygdx.game.objects.Wall;
 public class level3 implements Screen{
     JavaGame JG;
     boolean pause;
+    boolean isContact = true;
+    boolean destroyEllipse;
 
     Texture texturePause, tGearsBody;
     Texture tWatermelon;
@@ -45,10 +53,10 @@ public class level3 implements Screen{
     Ellipse ellipse;
 
     public level3(JavaGame context) {
+        destroyEllipse = false;
         world = new World(new Vector2(0, -10), false);
         JG = context;
         texturePause = new Texture(Gdx.files.internal("pause.png"));
-        tWatermelon = new Texture("watermelon.png");
 
         floor = new Wall(world, width/2, height, 16, 0f);
         floor = new Wall(world, width/2, 0, 16, 0f);
@@ -58,11 +66,10 @@ public class level3 implements Screen{
         floor = new Wall(world, width/2, 1.5f, 16, 0);
 
         box = new Box(world, new float[]{0, 1.5f, 2f, 1.5f, 2.5f, 4, 0, 4.5f}, false);
-        ellipse = new Ellipse(world, 1f, 5, true);
-        sensorDead = new SensorBox(world, 8, 8.5f, 8f, 0.5f, ellipse.ovalBody, "Dead");
 
-        gear = new Gear(world, 0, 4.5f, 3, true, 0.6f, -10, 50 , 50);
-        gear1 = new Gear(world, 0, 9f, 3.5f, true, 1f, 10, 50 , 50);
+
+        //gear = new Gear(world, 0, 4.5f, 3, true, 0.6f, -10, 50 , 50);
+        //gear1 = new Gear(world, 0, 9f, 3.5f, true, 1f, 10, 50 , 50);
 
 
 
@@ -83,23 +90,68 @@ public class level3 implements Screen{
     public void show() {
         JG.camera.setToOrtho(false, width, height);
         //JG.camera.position.set(width, height/2, 0);
+        ellipse = new Ellipse(world, 1f, 5, true);
+        tWatermelon = new Texture("watermelon.png");
+        sensorDead = new SensorBox(world, 8, 8.5f, 8f, 0.5f, ellipse.ovalBody, "Dead");
 
 
     }
 
     @Override
     public void render(float delta) {
+        world.setContactListener(new ContactListener() {
+            @Override
+            public void beginContact(Contact contact) {
+                Fixture fixtureA = contact.getFixtureA(); // это область, в которую попадает шар
+                Fixture fixtureB = contact.getFixtureB();
+                Body bodyA = fixtureA.getBody();
+                Body bodyB = fixtureB.getBody(); // это тело шара, который попадает в область
+                if (fixtureB.isSensor()){
+                    switch ((String) fixtureB.getUserData()) {
+                        case "Dead":
+                            destroyEllipse = true;
+                            System.out.println("Dead");
+                            break;
+                        case "Win":
+                            System.out.println("Win");
+                            break;
+                    }
+                }
+            }
+
+            @Override
+            public void endContact(Contact contact) {
+                isContact = false;
+            }
+
+            @Override
+            public void preSolve(Contact contact, Manifold oldManifold) {
+                isContact = true;
+            }
+
+            @Override
+            public void postSolve(Contact contact, ContactImpulse impulse) {
+
+            }
+        });
+        if (destroyEllipse) {
+            world.destroyBody(ellipse.ovalBody);
+            tWatermelon.dispose();
+            destroyEllipse = false;
+        }
         if (Gdx.input.isTouched()) {
             JG.touch.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             JG.camera.unproject(JG.touch);
-            if (ballLeft.hit(JG.touch.x, JG.touch.y)) {
-                ellipse.ovalBody.setLinearVelocity(-5, 0);
-            }
-            if (ballRight.hit(JG.touch.x, JG.touch.y)) {
-                ellipse.ovalBody.setLinearVelocity(5, 0);
-            }
-            if (ballUp.hit(JG.touch.x, JG.touch.y)) {
-                ellipse.ovalBody.applyForceToCenter(0, 10, true);
+            if (isContact){
+                if (ballLeft.hit(JG.touch.x, JG.touch.y)) {
+                    ellipse.ovalBody.setLinearVelocity(-5, 0);
+                }
+                if (ballRight.hit(JG.touch.x, JG.touch.y)) {
+                    ellipse.ovalBody.setLinearVelocity(5, 0);
+                }
+                if (ballUp.hit(JG.touch.x, JG.touch.y)) {
+                    ellipse.ovalBody.applyForceToCenter(0, 50, true);
+                }
             }
         }
         if (Gdx.input.justTouched()) {
@@ -112,16 +164,17 @@ public class level3 implements Screen{
         }
         ScreenUtils.clear(0,0,0,1);
         if (!pause)world.step(1/60f,6,2);
-        //JG.debugRenderer.render(world,JG.camera.combined);
+        //JG.camera.update();
+        JG.debugRenderer.render(world,JG.camera.combined);
 
 
         // Отрисовываем спрайт
         JG.batch.setProjectionMatrix(JG.camera.combined);
         JG.batch.begin();
-        JG.batch.draw(tGearsBody, gear.basis.getPosition().x*2 - gear.res/2, gear.basis.getPosition().y*2 - gear.res/2,
-                gear.res/2,gear.res/2, gear.res,gear.res, 3f,3f, gear.box.getAngle()* MathUtils.radiansToDegrees, 0,0, 500,500, false,false);
-        JG.batch.draw(tGearsBody, gear1.basis.getPosition().x*2 - gear1.res/2, gear1.basis.getPosition().y*2 - gear1.res/2,
-                gear1.res/2,gear1.res/2, gear1.res,gear1.res, 3f,3f, gear1.box.getAngle()* MathUtils.radiansToDegrees, 0,0, 500,500, false,false);
+        //JG.batch.draw(tGearsBody, gear.basis.getPosition().x*2 - gear.res/2, gear.basis.getPosition().y*2 - gear.res/2,
+        //        gear.res/2,gear.res/2, gear.res,gear.res, 3f,3f, gear.box.getAngle()* MathUtils.radiansToDegrees, 0,0, 500,500, false,false);
+        //JG.batch.draw(tGearsBody, gear1.basis.getPosition().x*2 - gear1.res/2, gear1.basis.getPosition().y*2 - gear1.res/2,
+        //        gear1.res/2,gear1.res/2, gear1.res,gear1.res, 3f,3f, gear1.box.getAngle()* MathUtils.radiansToDegrees, 0,0, 500,500, false,false);
         JG.batch.draw(texturePause,
                 buttonPause.body.getPosition().x- buttonPause.r,
                 buttonPause.body.getPosition().y- buttonPause.r,
