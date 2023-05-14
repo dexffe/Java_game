@@ -1,6 +1,7 @@
 package com.mygdx.game.worlds;
 
-import static com.mygdx.game.JavaGame.*;
+import static com.mygdx.game.JavaGame.height;
+import static com.mygdx.game.JavaGame.width;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -58,14 +59,14 @@ public class WorldsMenu  implements Screen {
     Gear[] gear1 = new Gear[12];
     Swing swing;
     Arc arc;
-    Box box1, box2, box3;
+    public Box box1, box2, box3;
     SensorBox impulseBox, destroyBox;
     float x;
     float speed;
     boolean goScreen, isObjDeleted;
     String fromScreen, toScreen;
     float w, h;
-    long timeLastCreateBox, timeCreateBoxInterval = 27700; //27500
+    long timeLastCreateBox, timeCreateBoxInterval = 28500; //27500
 
 
 
@@ -202,7 +203,7 @@ public class WorldsMenu  implements Screen {
             isObjDeleted = true;
         }
 
-        if (timeLastCreateBox + timeCreateBoxInterval + 5600  < TimeUtils.millis()) {
+        if (timeLastCreateBox + timeCreateBoxInterval + 6000  < TimeUtils.millis()) {
             isObjDeleted = false;
             timeLastCreateBox = TimeUtils.millis();
             x = 16;
