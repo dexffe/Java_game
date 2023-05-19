@@ -66,7 +66,7 @@ public class WorldsMenu  implements Screen {
     boolean goScreen, isObjDeleted;
     String fromScreen, toScreen;
     float w, h;
-    long timeLastCreateBox, timeCreateBoxInterval = 28500; //27500
+    long timeLastCreateBox, timeCreateBoxInterval = 28000; //27500
 
 
 
@@ -153,7 +153,7 @@ public class WorldsMenu  implements Screen {
         world.createJoint(rjd1);
 
         for (int i = 1; i < 16; i++) {
-            gear[i-1] = new Gear(world, 0, i+x, 6, true, 0.3f, -3, 50 , 50);
+            gear[i-1] = new Gear(world, 0, i+x, 6, true, 0.3f, -3, 50 , 50); //speed -3
         }
         ListTextureBall.put(textureLevelInIntro, buttonLevelInIntro);
         ListTextureBall.put(textureSettingsInIntro, buttonSettingsInIntro);
@@ -168,7 +168,7 @@ public class WorldsMenu  implements Screen {
         floor = new Wall(world, 8+x, 0, 16, 0f);
         floor = new Wall(world, 8+x, 9, 16, 0f);
         floor = new Wall(world, 16+x, 4.5f, 0f, 9);
-        //impulseBox = new SensorBox(world, 6+x, 0.5f, 2.5f, 0.5f, ball.body, "Left");
+        impulseBox = new SensorBox(world, 12+x, 5.5f, 2.5f, 0.5f, ball1.body, "Right");
         buttonIntroInLevel = new Ball(world, 15+x, 1, 0.5f, false);
         buttonLevel1InLevel = new Ball(world, 2+x, 3, 0.5f, false);
         buttonLevel2InLevel = new Ball(world, 4+x, 3, 0.5f, false);
@@ -203,7 +203,7 @@ public class WorldsMenu  implements Screen {
             isObjDeleted = true;
         }
 
-        if (timeLastCreateBox + timeCreateBoxInterval + 6000  < TimeUtils.millis()) {
+        if (timeLastCreateBox + timeCreateBoxInterval + 6600  < TimeUtils.millis()) {
             isObjDeleted = false;
             timeLastCreateBox = TimeUtils.millis();
             x = 16;
@@ -279,8 +279,12 @@ public class WorldsMenu  implements Screen {
         JG.batch.setProjectionMatrix(JG.camera.combined);
         JG.batch.begin();
         //JG.batch.draw(tBg,w/3, 0, w/3, h);
-        JG.batch.draw(t1Box200x300, box1.body.getPosition().x+16, box1.body.getPosition().y+7,
-                0,1, 1,1, 1f,1f, 0, 0,0, 200,300, false,false);
+        JG.batch.draw(t1Box200x300, box1.body.getPosition().x+16.25f, box1.body.getPosition().y+7,
+                0,1, 0.5f,1, 1f,1f, 0, 0,0, 200,300, false,false);
+        JG.batch.draw(t1Box200x300, box1.body.getPosition().x+18.75f, box3.body.getPosition().y+7,
+                0,1, 0.5f,1, 1f,1f, 0, 0,0, 200,300, false,false);
+        JG.batch.draw(t1Box300x200, box1.body.getPosition().x+16.75f, box3.body.getPosition().y+7f,
+                0,1, 2f,0.5f, 1f,1f, 0, 0,0, 300,200, false,false);
         JG.batch.draw(tBall,
                 ball1.body.getPosition().x- ball1.r,
                 ball1.body.getPosition().y- ball1.r,
