@@ -8,7 +8,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
 public class Triangle {
-    Body body;
+    public Body body;
 
     public Triangle(World world, float x, float y, float[] vertices){
         // Create our body definition

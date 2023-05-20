@@ -35,15 +35,16 @@ public class level3 implements Screen{
     boolean isContact = true;
     boolean destroyEllipse;
 
-    Texture texturePause, tGearsBody;
-    Texture tWatermelon;
+    Texture texturePause, tGearsBody, textureTriangle;
+    Texture textureWatermelon, textureButtonRight, textureButtonLeft, textureButtonUp;
+
     Sprite sprite;
     SpriteBatch batch;
     TextButton btnPlay, btnSettings, btnExit;
 
     World world;
 
-    Triangle triangle;
+    Triangle[] triangle = new Triangle[14];
     Wall floor;
     Ball ball, buttonPause, ballLeft, ballRight, ballUp;
     Gear gear, gear1;
@@ -57,6 +58,11 @@ public class level3 implements Screen{
         world = new World(new Vector2(0, -10), false);
         JG = context;
         texturePause = new Texture(Gdx.files.internal("pause.png"));
+        textureTriangle = new Texture(Gdx.files.internal("peak.png"));
+
+        textureButtonRight = new Texture(Gdx.files.internal("arrowRight.png"));
+        textureButtonLeft = new Texture(Gdx.files.internal("arrowLeft.png"));
+        textureButtonUp = new Texture(Gdx.files.internal("arrowUp.png"));
 
         floor = new Wall(world, width/2, height, 16, 0f);
         floor = new Wall(world, width/2, 0, 16, 0f);
@@ -65,7 +71,7 @@ public class level3 implements Screen{
 
         floor = new Wall(world, width/2, 1.5f, 16, 0);
 
-        box = new Box(world, new float[]{0, 1.5f, 2f, 1.5f, 2.5f, 4, 0, 4.5f}, false);
+        box = new Box(world, new float[]{0, 1.5f, 2f, 1.5f, 2.5f, 4, 0, 4.5f}, false, 0, 0);
 
 
         //gear = new Gear(world, 0, 4.5f, 3, true, 0.6f, -10, 50 , 50);
@@ -73,25 +79,26 @@ public class level3 implements Screen{
 
 
 
-        for (int i = 0; i < 15; i++) {
-            if (i % 2 == 0) triangle = new Triangle(world, i, 8f, new float[] {0, 1, 1.5f, 1, 0.75f, 0});
+        for (int i = 0; i < 14; i++) {
+            triangle[i] = new Triangle(world, i+1, 8f, new float[] {0, 1, 1.5f, 1, 0.75f, 0});
         }
 
 
-        ballLeft = new Ball(world, 1f, 0.75f, 0.4f, false);
-        ballRight = new Ball(world, 2.5f, 0.75f, 0.4f, false);
-        ballUp = new Ball(world, 14.5f, 0.75f, 0.4f, false);
+        ballLeft = new Ball(world, 1f, 0.75f, 0.5f, false);
+        ballRight = new Ball(world, 2.5f, 0.75f, 0.5f, false);
+        ballUp = new Ball(world, 14.5f, 0.75f, 0.5f, false);
 
         buttonPause = new Ball(world, 15.5f, 8.5f, 0.3f, false);
         tGearsBody = new Texture("gear.png");
+        ellipse = new Ellipse(world, 1f, 5, true);
+
     }
 
     @Override
     public void show() {
         JG.camera.setToOrtho(false, width, height);
         //JG.camera.position.set(width, height/2, 0);
-        ellipse = new Ellipse(world, 1f, 5, true);
-        tWatermelon = new Texture("watermelon.png");
+        textureWatermelon = new Texture("watermelon.png");
         sensorDead = new SensorBox(world, 8, 8.5f, 8f, 0.5f, ellipse.ovalBody, "Dead");
 
 
@@ -136,7 +143,7 @@ public class level3 implements Screen{
         });
         if (destroyEllipse) {
             world.destroyBody(ellipse.ovalBody);
-            tWatermelon.dispose();
+            textureWatermelon.dispose();
             destroyEllipse = false;
         }
         if (Gdx.input.isTouched()) {
@@ -150,7 +157,7 @@ public class level3 implements Screen{
                     ellipse.ovalBody.setLinearVelocity(5, 0);
                 }
                 if (ballUp.hit(JG.touch.x, JG.touch.y)) {
-                    ellipse.ovalBody.applyForceToCenter(0, 50, true);
+                    ellipse.ovalBody.applyForceToCenter(0, 150, true);
                 }
             }
         }
@@ -180,11 +187,31 @@ public class level3 implements Screen{
                 buttonPause.body.getPosition().y- buttonPause.r,
                 0, buttonPause.r*2, buttonPause.r*2, buttonPause.r*2,
                 1,1,0,0,0,100,100,false,false);
-        JG.batch.draw(tWatermelon,
+        JG.batch.draw(textureWatermelon,
               ellipse.ovalBody.getPosition().x- 0.4f,
              ellipse.ovalBody.getPosition().y- 0.3f,
            0.4f, 0.3f, 0.4f*2, 0.3f*2,
            1,1,ellipse.ovalBody.getAngle()* MathUtils.radiansToDegrees,0,0,150,120,false,false);
+
+        JG.batch.draw(textureButtonLeft,
+                ballLeft.body.getPosition().x- ballLeft.r,
+                ballLeft.body.getPosition().y- ballLeft.r,
+                0, ballLeft.r*2, ballLeft.r*2, ballLeft.r*2,
+                1,1,0,0,0,100,100,false,false);
+        JG.batch.draw(textureButtonRight,
+                ballRight.body.getPosition().x- ballRight.r,
+                ballRight.body.getPosition().y- ballRight.r,
+                0, ballRight.r*2, ballRight.r*2, ballRight.r*2,
+                1,1,0,0,0,100,100,false,false);
+        JG.batch.draw(textureButtonUp,
+                ballUp.body.getPosition().x- ballUp.r,
+                ballUp.body.getPosition().y- ballUp.r,
+                0, ballUp.r*2, ballUp.r*2, ballUp.r*2,
+                1,1,0,0,0,100,100,false,false);
+        for (int i = 0; i < triangle.length; i++) {
+            JG.batch.draw(textureTriangle, triangle[i].body.getPosition().x+0.5f, triangle[i].body.getPosition().y+1,
+                    0,0, 1,1, 1.5f,1f, 180, 0,0, 300,300, false,false);
+        }
         JG.batch.end();
     }
 

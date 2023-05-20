@@ -114,10 +114,10 @@ public class WorldsMenu  implements Screen {
 
         //Intro objects
         x = 16;
-        tBg = new Texture("background.png");
+        tBg = new Texture("bg.png");
         textureSettingsInIntro = new Texture(Gdx.files.internal("settings.png"));
         textureLevelInIntro = new Texture(Gdx.files.internal("start.png"));
-        textureAboutInIntro = new Texture(Gdx.files.internal("skelet.png"));
+        textureAboutInIntro = new Texture(Gdx.files.internal("about.png"));
         tGearsBody = new Texture("gear.png");
         tGearsPeace = new Texture("gearsPeace.png");
         tBall = new Texture("Ball.png");
@@ -131,10 +131,12 @@ public class WorldsMenu  implements Screen {
         buttonSettingsInIntro = new Ball(world, 6+x, 3.5f, 0.4f, false);
         buttonAboutInIntro = new Ball(world, 10+x, 3.5f, 0.4f, false);
 
-        box1 = new Box(world, new float[]{0.8f+x-0.5f, 7.5f, 0.8f+x-0.5f, 7f, 3.8f+x-0.5f, 7f, 3.8f+x-0.5f, 7.5f}, true);
-        box2 = new Box(world, new float[]{0.8f+x-0.5f, 8f, 0.8f+x-0.5f, 7f, 0.8f+x, 7f, 0.8f+x, 8f}, true);
-        box3 = new Box(world, new float[]{3.3f+x-0.5f, 8f, 3.3f+x-0.5f, 7f, 3.3f+x, 7f, 3.3f+x, 8f}, true);
-        //world.destroyBody(box1.body);
+        //box1 = new Box(world, new float[]{0.8f+x-0.5f, 7.5f, 0.8f+x-0.5f, 7f, 3.8f+x-0.5f, 7f, 3.8f+x-0.5f, 7.5f}, true);
+        box1 = new Box(world, new float[]{-1.5f, 0.25f, -1.5f, -0.25f, 1.5f, -0.25f, 1.5f, 0.25f}, true, 18.25f, 6.75f-3);
+        //box2 = new Box(world, new float[]{0.8f+x-0.5f, 8f, 0.8f+x-0.5f, 7f, 0.8f+x, 7f, 0.8f+x, 8f}, true);
+        box2 = new Box(world, new float[]{-0.25f, 1f, -0.25f, 0, 0.25f, 0, 0.25f, 1}, true, 17f, 7-3);
+        //box3 = new Box(world, new float[]{3.3f+x-0.5f, 8f, 3.3f+x-0.5f, 7f, 3.3f+x, 7f, 3.3f+x, 8f}, true);
+        box3 = new Box(world, new float[]{-0.25f, 1f, -0.25f, 0, 0.25f, 0, 0.25f, 1}, true, 19.5f, 7-3);
 
         WeldJointDef rjd = new WeldJointDef();
         rjd.collideConnected = false;
@@ -162,9 +164,9 @@ public class WorldsMenu  implements Screen {
         // Level objects
         x = 16*2;
         textureIntroInLevel = new Texture(Gdx.files.internal("return.png"));
-        textureLevel1InLevel = new Texture(Gdx.files.internal("start.png"));
-        textureLevel2InLevel = new Texture(Gdx.files.internal("start.png"));
-        textureLevel3InLevel = new Texture(Gdx.files.internal("start.png"));
+        textureLevel1InLevel = new Texture(Gdx.files.internal("level1.png"));
+        textureLevel2InLevel = new Texture(Gdx.files.internal("level2.png"));
+        textureLevel3InLevel = new Texture(Gdx.files.internal("level3.png"));
         floor = new Wall(world, 8+x, 0, 16, 0f);
         floor = new Wall(world, 8+x, 9, 16, 0f);
         floor = new Wall(world, 16+x, 4.5f, 0f, 9);
@@ -207,9 +209,12 @@ public class WorldsMenu  implements Screen {
             isObjDeleted = false;
             timeLastCreateBox = TimeUtils.millis();
             x = 16;
-            box1 = new Box(world, new float[]{0.8f + x - 0.5f, 7.5f, 0.8f + x - 0.5f, 7f, 3.8f + x - 0.5f, 7f, 3.8f + x - 0.5f, 7.5f}, true);
-            box2 = new Box(world, new float[]{0.8f + x - 0.5f, 8f, 0.8f + x - 0.5f, 7f, 0.8f + x, 7f, 0.8f + x, 8f}, true);
-            box3 = new Box(world, new float[]{3.3f + x - 0.5f, 8f, 3.3f + x - 0.5f, 7f, 3.3f + x, 7f, 3.3f + x, 8f}, true);
+            //box1 = new Box(world, new float[]{0.8f+x-0.5f, 7.5f, 0.8f+x-0.5f, 7f, 3.8f+x-0.5f, 7f, 3.8f+x-0.5f, 7.5f}, true);
+            box1 = new Box(world, new float[]{-1.5f, 0.25f, -1.5f, -0.25f, 1.5f, -0.25f, 1.5f, 0.25f}, false, 16, 7);
+            //box2 = new Box(world, new float[]{0.8f+x-0.5f, 8f, 0.8f+x-0.5f, 7f, 0.8f+x, 7f, 0.8f+x, 8f}, true);
+            box2 = new Box(world, new float[]{-0.25f, 0.5f, -0.25f, -0.5f, 0.25f, -0.5f, 0.25f, 0.5f}, false, 16, 8);
+            //box3 = new Box(world, new float[]{3.3f+x-0.5f, 8f, 3.3f+x-0.5f, 7f, 3.3f+x, 7f, 3.3f+x, 8f}, true);
+            box3 = new Box(world, new float[]{-0.25f, 0.5f, -0.25f, -0.5f, 0.25f, -0.5f, 0.25f, 0.5f}, false, 19, 8);
             //world.destroyBody(box1.body);
 
             WeldJointDef rjd = new WeldJointDef();
@@ -278,13 +283,19 @@ public class WorldsMenu  implements Screen {
         // Отрисовываем спрайт
         JG.batch.setProjectionMatrix(JG.camera.combined);
         JG.batch.begin();
-        //JG.batch.draw(tBg,w/3, 0, w/3, h);
-        JG.batch.draw(t1Box200x300, box1.body.getPosition().x+16.25f, box1.body.getPosition().y+7,
-                0,1, 0.5f,1, 1f,1f, 0, 0,0, 200,300, false,false);
-        JG.batch.draw(t1Box200x300, box1.body.getPosition().x+18.75f, box3.body.getPosition().y+7,
-                0,1, 0.5f,1, 1f,1f, 0, 0,0, 200,300, false,false);
-        JG.batch.draw(t1Box300x200, box1.body.getPosition().x+16.75f, box3.body.getPosition().y+7f,
-                0,1, 2f,0.5f, 1f,1f, 0, 0,0, 300,200, false,false);
+        JG.batch.draw(tBg,0, 0, w, h);
+
+        /*JG.batch.draw(t1Box200x300, box1.body.getPosition().x+16.25f, box1.body.getPosition().y+7,
+                0,1, 0.5f,1, 1f,1f, box1.body.getAngle()* MathUtils.radiansToDegrees, 0,0, 200,300, false,false);*/
+
+        //JG.batch.draw(t1Box200x300, box2.body.getPosition().x+18.75f, box2.body.getPosition().y+7,
+        //        0,1, 0.5f,1, 1f,1f, box2.body.getAngle()* MathUtils.radiansToDegrees, 0,0, 200,300, false,false);
+
+        JG.batch.draw(t1Box200x300, box1.getX()+1.5f, box1.getY()-0.25f,
+                0,1, box1.width,box1.height, 1,1, box1.body.getAngle()* MathUtils.radiansToDegrees, 0,0, 200,300, false,false);
+
+        /*JG.batch.draw(t1Box300x200, box3.body.getPosition().x+16.75f, box3.body.getPosition().y+7f,
+                0,1, 2f,0.5f, 1f,1f, box3.body.getAngle()* MathUtils.radiansToDegrees, 0,0, 300,200, false,false);*/
         JG.batch.draw(tBall,
                 ball1.body.getPosition().x- ball1.r,
                 ball1.body.getPosition().y- ball1.r,
