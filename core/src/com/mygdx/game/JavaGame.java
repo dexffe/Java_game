@@ -17,7 +17,7 @@ public class JavaGame extends Game {
 
 	public SpriteBatch batch;
 	public OrthographicCamera camera;
-	public Box2DDebugRenderer debugRenderer;
+	public Box2DDebugRenderer debugRenderer, debugRenderer2;
 	public Vector3 touch;
 
 	public WorldAbout worldAbout;
@@ -40,7 +40,7 @@ public class JavaGame extends Game {
 		touch = new Vector3();
 
 		//camera.setToOrtho(false, width, height);
-
+		debugRenderer2 = new Box2DDebugRenderer();
 		debugRenderer = new Box2DDebugRenderer();
 
 		worldsMenu = new WorldsMenu(this);
@@ -63,6 +63,7 @@ public class JavaGame extends Game {
 
 	@Override
 	public void dispose() {
+		debugRenderer2.dispose();
 		debugRenderer.dispose();
 		batch.dispose();
 	}

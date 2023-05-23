@@ -5,6 +5,7 @@ import static com.mygdx.game.JavaGame.width;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -33,7 +34,7 @@ import java.util.Map;
 
 public class WorldsMenu  implements Screen {
     JavaGame JG;
-
+    public Music BackgroundMusic, PushButton, ScreenMove;
     Texture textureGoIntroInSettings;
     Texture tBg, tGearsPeace, tGearsBody, tBall, t1Box200x300,t1Box300x200;
 
@@ -59,27 +60,39 @@ public class WorldsMenu  implements Screen {
     Gear[] gear1 = new Gear[12];
     Swing swing;
     Arc arc;
-    public Box box1, box2, box3;
+    public Box boxDown, boxRight, boxLeft;
     SensorBox impulseBox, destroyBox;
     float x;
     float speed;
     boolean goScreen, isObjDeleted;
     String fromScreen, toScreen;
     float w, h;
-    long timeLastCreateBox, timeCreateBoxInterval = 28000; //27500
+    long timeLastCreateBox, timeCreateBoxInterval = 25000; //27500
 
 
 
 
 
     public WorldsMenu(JavaGame context) {
+        // System parameters
         JG = context;
         JG.camera.setToOrtho(false, width, height);
         world = new World(new Vector2(0, -10), false);
         touch = new Vector3();
         w = width*3;
         h = height;
-        System.out.println("show");
+
+        // Music
+        ScreenMove = Gdx.audio.newMusic(Gdx.files.internal("ScreenMove.mp3"));
+        ScreenMove.setVolume(1);
+
+        PushButton = Gdx.audio.newMusic(Gdx.files.internal("ButtonPush.mp3"));
+        PushButton.setVolume(1);
+
+        BackgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("MusicGame.mp3"));
+        BackgroundMusic.play();
+        BackgroundMusic.setLooping(true);
+        BackgroundMusic.setVolume(0.1f);
 
         // Settings objects
         textureGoIntroInSettings = new Texture(Gdx.files.internal("return.png"));
@@ -96,13 +109,6 @@ public class WorldsMenu  implements Screen {
         ball2.body.setLinearVelocity(-4, 0);
         ball3 = new Ball(world, 8f, 0.5f, 0.2f, true);
         ball3.body.setLinearVelocity(-4, 0);
-
-        //ball = new Ball(world, 7.1f, 0.5f, 0.2f, true);
-        //ball.body.setLinearVelocity(-4, 0);
-        //ball = new Ball(world, 7.7f, 0.5f, 0.2f, true);
-        //ball.body.setLinearVelocity(-4, 0);
-        //ball = new Ball(world, 8f, 0.5f, 0.2f, true);
-        //ball.body.setLinearVelocity(-4, 0);
 
         arc = new Arc(world, 1.7f, 7.3f, 10, 1.7f, 3f, 0.7f);
         arc = new Arc(world, 1f, 8f, 10, 1.7f, 3f, 1f);
@@ -131,31 +137,30 @@ public class WorldsMenu  implements Screen {
         buttonSettingsInIntro = new Ball(world, 6+x, 3.5f, 0.4f, false);
         buttonAboutInIntro = new Ball(world, 10+x, 3.5f, 0.4f, false);
 
-        //box1 = new Box(world, new float[]{0.8f+x-0.5f, 7.5f, 0.8f+x-0.5f, 7f, 3.8f+x-0.5f, 7f, 3.8f+x-0.5f, 7.5f}, true);
-        box1 = new Box(world, new float[]{-1.5f, 0.25f, -1.5f, -0.25f, 1.5f, -0.25f, 1.5f, 0.25f}, true, 18.25f, 6.75f-3);
-        //box2 = new Box(world, new float[]{0.8f+x-0.5f, 8f, 0.8f+x-0.5f, 7f, 0.8f+x, 7f, 0.8f+x, 8f}, true);
-        box2 = new Box(world, new float[]{-0.25f, 1f, -0.25f, 0, 0.25f, 0, 0.25f, 1}, true, 17f, 7-3);
-        //box3 = new Box(world, new float[]{3.3f+x-0.5f, 8f, 3.3f+x-0.5f, 7f, 3.3f+x, 7f, 3.3f+x, 8f}, true);
-        box3 = new Box(world, new float[]{-0.25f, 1f, -0.25f, 0, 0.25f, 0, 0.25f, 1}, true, 19.5f, 7-3);
+        boxDown = new Box(world, new float[]{-1.5f, 0.25f, -1.5f, -0.25f, 1.5f, -0.25f, 1.5f, 0.25f}, true, 18.25f, 6.75f);
+        boxRight = new Box(world, new float[]{-0.25f, 1f, -0.25f, 0, 0.25f, 0, 0.25f, 1}, true, 17f, 6.5f);
+        boxLeft = new Box(world, new float[]{-0.25f, 1f, -0.25f, 0, 0.25f, 0, 0.25f, 1}, true, 19.5f, 6.5f);
 
         WeldJointDef rjd = new WeldJointDef();
         rjd.collideConnected = false;
-        rjd.bodyA = box1.body;
-        rjd.bodyB = box2.body;
-        rjd.localAnchorA.set(box1.body.getPosition().x, box1.body.getPosition().y);
-        rjd.localAnchorB.set(box2.body.getPosition().x, box2.body.getPosition().y);
+        rjd.bodyA = boxDown.body;
+        rjd.bodyB = boxRight.body;
+        rjd.localAnchorA.set(1.25f, 0);
+        rjd.localAnchorB.set(0, 0.25f);
         world.createJoint(rjd);
 
         WeldJointDef rjd1 = new WeldJointDef();
         rjd1.collideConnected = false;
-        rjd1.bodyA = box1.body;
-        rjd1.bodyB = box3.body;
-        rjd1.localAnchorA.set(box1.body.getPosition().x, box1.body.getPosition().y);
-        rjd1.localAnchorB.set(box3.body.getPosition().x, box3.body.getPosition().y);
+        rjd1.bodyA = boxDown.body;
+        rjd1.bodyB = boxLeft.body;
+        rjd1.localAnchorA.set(-1.25f, 0);
+        rjd1.localAnchorB.set(0, 0.25f);
         world.createJoint(rjd1);
 
+        float r = 0;
         for (int i = 1; i < 16; i++) {
-            gear[i-1] = new Gear(world, 0, i+x, 6, true, 0.3f, -3, 50 , 50); //speed -3
+            //r += 0.25f;
+            gear[i-1] = new Gear(world, 0, i+x+r, 6, true, 0.3f, -3, 50 , 50); //speed -3
         }
         ListTextureBall.put(textureLevelInIntro, buttonLevelInIntro);
         ListTextureBall.put(textureSettingsInIntro, buttonSettingsInIntro);
@@ -175,13 +180,14 @@ public class WorldsMenu  implements Screen {
         buttonLevel1InLevel = new Ball(world, 2+x, 3, 0.5f, false);
         buttonLevel2InLevel = new Ball(world, 4+x, 3, 0.5f, false);
         buttonLevel3InLevel = new Ball(world, 6+x, 3, 0.5f, false);
-        float h = 6f;
+        float h = 6f, r1 = 0;
         float count = 0;
         for (int i = 0; i < 12; i++) {
-            gear1[i] = new Gear(world, 0, i+x, h, true, 0.3f, -3, 35 , 50);
+            //r1 += 0.25f;
+            gear1[i] = new Gear(world, 0, i+x+r1, h, true, 0.3f, -3, 35 , 50);
             if (h != 7f && count >= 4 && count <= 8) h += 0.2f;
             count += 1;
-        }
+            }
         arc = new Arc(world, 11f+x, 5f, 30, 0f, -1.5f, 5f);
         ListTextureBall.put(textureIntroInLevel, buttonIntroInLevel);
         ListTextureBall.put(textureLevel1InLevel, buttonLevel1InLevel);
@@ -199,9 +205,9 @@ public class WorldsMenu  implements Screen {
     @Override
     public void render(float delta) {
         if (timeLastCreateBox + timeCreateBoxInterval < TimeUtils.millis() && !isObjDeleted) {
-            world.destroyBody(box1.body);
-            world.destroyBody(box2.body);
-            world.destroyBody(box3.body);
+            world.destroyBody(boxDown.body);
+            world.destroyBody(boxRight.body);
+            world.destroyBody(boxLeft.body);
             isObjDeleted = true;
         }
 
@@ -210,27 +216,26 @@ public class WorldsMenu  implements Screen {
             timeLastCreateBox = TimeUtils.millis();
             x = 16;
             //box1 = new Box(world, new float[]{0.8f+x-0.5f, 7.5f, 0.8f+x-0.5f, 7f, 3.8f+x-0.5f, 7f, 3.8f+x-0.5f, 7.5f}, true);
-            box1 = new Box(world, new float[]{-1.5f, 0.25f, -1.5f, -0.25f, 1.5f, -0.25f, 1.5f, 0.25f}, false, 16, 7);
+            boxDown = new Box(world, new float[]{-1.5f, 0.25f, -1.5f, -0.25f, 1.5f, -0.25f, 1.5f, 0.25f}, true, 18.25f, 6.75f);
             //box2 = new Box(world, new float[]{0.8f+x-0.5f, 8f, 0.8f+x-0.5f, 7f, 0.8f+x, 7f, 0.8f+x, 8f}, true);
-            box2 = new Box(world, new float[]{-0.25f, 0.5f, -0.25f, -0.5f, 0.25f, -0.5f, 0.25f, 0.5f}, false, 16, 8);
+            boxRight = new Box(world, new float[]{-0.25f, 1f, -0.25f, 0, 0.25f, 0, 0.25f, 1}, true, 17f, 6.5f);
             //box3 = new Box(world, new float[]{3.3f+x-0.5f, 8f, 3.3f+x-0.5f, 7f, 3.3f+x, 7f, 3.3f+x, 8f}, true);
-            box3 = new Box(world, new float[]{-0.25f, 0.5f, -0.25f, -0.5f, 0.25f, -0.5f, 0.25f, 0.5f}, false, 19, 8);
-            //world.destroyBody(box1.body);
+            boxLeft = new Box(world, new float[]{-0.25f, 1f, -0.25f, 0, 0.25f, 0, 0.25f, 1}, true, 19.5f, 6.5f);
 
             WeldJointDef rjd = new WeldJointDef();
             rjd.collideConnected = false;
-            rjd.bodyA = box1.body;
-            rjd.bodyB = box2.body;
-            rjd.localAnchorA.set(box1.body.getPosition().x, box1.body.getPosition().y);
-            rjd.localAnchorB.set(box2.body.getPosition().x, box2.body.getPosition().y);
+            rjd.bodyA = boxDown.body;
+            rjd.bodyB = boxRight.body;
+            rjd.localAnchorA.set(1.25f, 0);
+            rjd.localAnchorB.set(0, 0.25f);
             world.createJoint(rjd);
 
             WeldJointDef rjd1 = new WeldJointDef();
             rjd1.collideConnected = false;
-            rjd1.bodyA = box1.body;
-            rjd1.bodyB = box3.body;
-            rjd1.localAnchorA.set(box1.body.getPosition().x, box1.body.getPosition().y);
-            rjd1.localAnchorB.set(box3.body.getPosition().x, box3.body.getPosition().y);
+            rjd1.bodyA = boxDown.body;
+            rjd1.bodyB = boxLeft.body;
+            rjd1.localAnchorA.set(-1.25f, 0);
+            rjd1.localAnchorB.set(0, 0.25f);
             world.createJoint(rjd1);
         }
 
@@ -239,7 +244,8 @@ public class WorldsMenu  implements Screen {
         ScreenUtils.clear(0,0,0,1);
         world.step(1/60f,6,2);
         JG.camera.update();
-        JG.debugRenderer.render(world,JG.camera.combined);
+        //JG.debugRenderer2.render(world,JG.camera.combined);
+        //JG.debugRenderer.render(world,JG.camera.combined);
 
         if (goScreen){
             speed += 0.3;
@@ -285,17 +291,22 @@ public class WorldsMenu  implements Screen {
         JG.batch.begin();
         JG.batch.draw(tBg,0, 0, w, h);
 
-        /*JG.batch.draw(t1Box200x300, box1.body.getPosition().x+16.25f, box1.body.getPosition().y+7,
-                0,1, 0.5f,1, 1f,1f, box1.body.getAngle()* MathUtils.radiansToDegrees, 0,0, 200,300, false,false);*/
+        JG.batch.draw(t1Box200x300, boxRight.getX()- boxRight.width/2, boxRight.getY(),
+                boxRight.width/2,0, boxRight.width, boxRight.height, 1,1,
+                boxRight.body.getAngle()* MathUtils.radiansToDegrees,
+                0,0, 200,300, false,false);
 
-        //JG.batch.draw(t1Box200x300, box2.body.getPosition().x+18.75f, box2.body.getPosition().y+7,
-        //        0,1, 0.5f,1, 1f,1f, box2.body.getAngle()* MathUtils.radiansToDegrees, 0,0, 200,300, false,false);
 
-        JG.batch.draw(t1Box200x300, box1.getX()+1.5f, box1.getY()-0.25f,
-                0,1, box1.width,box1.height, 1,1, box1.body.getAngle()* MathUtils.radiansToDegrees, 0,0, 200,300, false,false);
+        JG.batch.draw(t1Box200x300, boxLeft.getX()- boxLeft.width/2, boxLeft.getY(),
+                boxLeft.width/2,0, boxLeft.width, boxLeft.height, 1,1,
+                boxLeft.body.getAngle()* MathUtils.radiansToDegrees,
+                0,0, 200,300, false,false);
 
-        /*JG.batch.draw(t1Box300x200, box3.body.getPosition().x+16.75f, box3.body.getPosition().y+7f,
-                0,1, 2f,0.5f, 1f,1f, box3.body.getAngle()* MathUtils.radiansToDegrees, 0,0, 300,200, false,false);*/
+        JG.batch.draw(t1Box300x200, boxDown.getX()- boxDown.width/2, boxDown.getY()- boxDown.height/2,
+                boxDown.width/2, boxDown.height/2, boxDown.width, boxDown.height, 1,1,
+                boxDown.body.getAngle()* MathUtils.radiansToDegrees,
+                0,0, 300,200, false,false);
+
         JG.batch.draw(tBall,
                 ball1.body.getPosition().x- ball1.r,
                 ball1.body.getPosition().y- ball1.r,
@@ -322,31 +333,28 @@ public class WorldsMenu  implements Screen {
                     gear1[i].res/2,gear1[i].res/2, gear1[i].res,gear1[i].res, 3f,3f, gear1[i].box.getAngle()* MathUtils.radiansToDegrees, 0,0, 500,500, false,false);
         }
 
-
-        //JG.batch.draw(textureIntroInLevel,
-        //        ball.body.getPosition().x- ball.r,
-        //        ball.body.getPosition().y- ball.r,
-        //        0, ball.r*2, ball.r*2, ball.r*2,
-        //        1,1,0,0,0,100,100,false,false);
-        //JG.batch.draw(tBg,0,0, w/3, h);
-
-        //JG.batch.draw(tBg,w/3+ w/3, 0, w/3, h);
         if (Gdx.input.justTouched()) {
             touch.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             JG.camera.unproject(touch);
             if (buttonSettingsInIntro.hit(touch.x, touch.y)) {
+                PushButton.play();
+                ScreenMove.play();
                 fromScreen = "Intro";
                 toScreen = "Settings";
                 goScreen = true;
                 //JG.camera.position.set(w/6, h/2, 0);
             }
             if (buttonAboutInIntro.hit(touch.x, touch.y)) {
+                PushButton.play();
+                ScreenMove.play();
                 fromScreen = "Intro";
                 toScreen = "About";
                 goScreen = true;
                 //camera.position.set(w/6, h/2, 0);
             }
             if (buttonLevelInIntro.hit(touch.x, touch.y)) {
+                PushButton.play();
+                ScreenMove.play();
                 fromScreen = "Intro";
                 toScreen = "Level";
                 goScreen = true;
@@ -354,6 +362,8 @@ public class WorldsMenu  implements Screen {
             }
 
             if (ballGoIntroInSettings.hit(touch.x, touch.y)) {
+                PushButton.play();
+                ScreenMove.play();
                 fromScreen = "Settings";
                 toScreen = "Intro";
                 goScreen = true;
@@ -361,15 +371,23 @@ public class WorldsMenu  implements Screen {
             }
 
             if (buttonLevel1InLevel.hit(touch.x, touch.y)) {
+                PushButton.play();
+                ScreenMove.play();
                 JG.setScreen(JG.level1);
             }
             if (buttonLevel2InLevel.hit(touch.x, touch.y)) {
+                PushButton.play();
+                ScreenMove.play();
                 JG.setScreen(JG.level2);
             }
             if (buttonLevel3InLevel.hit(touch.x, touch.y)) {
+                PushButton.play();
+                ScreenMove.play();
                 JG.setScreen(JG.level3);
             }
             if (buttonIntroInLevel.hit(touch.x, touch.y)) {
+                PushButton.play();
+                ScreenMove.play();
                 fromScreen = "Level";
                 toScreen = "Intro";
                 goScreen = true;
