@@ -13,12 +13,14 @@ public class Box {
     FixtureDef fixtureDef;
     public float width, height;
 
-    public Box(World world, float[] vertices, boolean dynamic, float x, float y){
+    public Box(World world, float[] vertices, boolean dynamic, float x, float y, float angle){
 
         PolygonShape shape = new PolygonShape();
         shape.set(vertices);
+        //shape.setAsBox();
 
         bodyDef = new BodyDef();
+        bodyDef.angle = angle;
         bodyDef.position.set(x, y);
         if (dynamic){
             bodyDef.type = BodyDef.BodyType.DynamicBody;

@@ -68,23 +68,22 @@ public class level1 implements Screen{
         floor = new Wall(world, 0, height/2, 0, 9);
         floor = new Wall(world, width, height/2, 0, 9);
 
-        box = new Box(world, new float[]{0, 1.5f, 3, 1.5f, 3, 6.5f, 0, 6.5f}, false, 8, 2);
-        box = new Box(world, new float[]{13, 1.5f, 16, 1.5f, 13, 5.5f, 16, 4.5f}, false, 8, 4);
+        box = new Box(world, new float[]{0, 1.5f, 3, 1.5f, 3, 6.5f, 0, 6.5f}, false, 8, 2, 0);
+        box = new Box(world, new float[]{13, 1.5f, 16, 1.5f, 13, 5.5f, 16, 4.5f}, false, 8, 4, 0);
 
         //ball = new Ball(world, 1.5f, 7, 0.5f, true);
+        ellipse = new Ellipse(world, 1.5f, 7, true);
 
-
-        for (int i = 0; i < 10; i++) {
-            triangle[i] = new Triangle(world, 3+i, 1.5f, new float[] {0, 0, 1, 0, 0.5f, 1});
+        for (int i = 1; i < 11; i++) {
+            triangle = new Triangle(world, 2+i, 1.5f, new float[] {0, 0, 1, 0, 0.5f, 1});
         }
 
 
-        ballLeft = new Ball(world, 1f, 0.75f, 0.5f, false);
-        ballRight = new Ball(world, 2.5f, 0.75f, 0.5f, false);
-        ballUp = new Ball(world, 14.5f, 0.75f, 0.5f, false);
+        ballLeft = new Ball(world, 1f, 0.75f, 0.4f, false);
+        ballRight = new Ball(world, 2.5f, 0.75f, 0.4f, false);
+        ballUp = new Ball(world, 14.5f, 0.75f, 0.4f, false);
 
         buttonPause = new Ball(world, 15.5f, 8.5f, 0.3f, false);
-        ellipse = new Ellipse(world, 1.5f, 7, true);
 
     }
 
@@ -92,6 +91,7 @@ public class level1 implements Screen{
     public void show() {
         JG.camera.setToOrtho(false, width, height);
         //JG.camera.position.set(width, height/2, 0);
+        ellipse = new Ellipse(world, 1.5f, 7, true);
         textureWatermelon = new Texture("watermelon.png");
         sensorDead = new SensorBox(world, 8, 2f, 5f, 0.5f, ellipse.ovalBody, "Dead");
 
@@ -146,10 +146,25 @@ public class level1 implements Screen{
             JG.camera.unproject(JG.touch);
             if (buttonPause.hit(JG.touch.x, JG.touch.y)) {
                 //pause();
-                JG.setScreen(JG.worldsMenu);
+                JG.setScreen(JG.worldMenu);
             }
         }
-        if (Gdx.input.isTouched()) {
+        if (Gdx.input.isTouched(0)) {
+
+            JG.touch.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+            JG.camera.unproject(JG.touch);
+            if (ballLeft.hit(JG.touch.x, JG.touch.y)) {
+                ellipse.ovalBody.setLinearVelocity(-5, 0);
+            }
+            if (ballRight.hit(JG.touch.x, JG.touch.y)) {
+                ellipse.ovalBody.setLinearVelocity(5, 0);
+
+            }
+            if (ballUp.hit(JG.touch.x, JG.touch.y)) {
+                ellipse.ovalBody.applyForceToCenter(0, 10, true);
+            }
+        }if (Gdx.input.isTouched(1)) {
+
             JG.touch.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             JG.camera.unproject(JG.touch);
             if (isContact){
@@ -160,7 +175,7 @@ public class level1 implements Screen{
                     ellipse.ovalBody.setLinearVelocity(5, 0);
                 }
                 if (ballUp.hit(JG.touch.x, JG.touch.y)) {
-                    ellipse.ovalBody.applyForceToCenter(0, 150, true);
+                    ellipse.ovalBody.applyForceToCenter(0, 50, true);
                 }
             }
         }
@@ -202,7 +217,6 @@ public class level1 implements Screen{
                     0,0, 1,1, 1f,1f, 0, 0,0, 300,300, false,false);
         }
         JG.batch.end();
-
     }
 
     @Override

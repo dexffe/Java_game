@@ -32,10 +32,9 @@ import com.mygdx.game.objects.Wall;
 import java.util.HashMap;
 import java.util.Map;
 
-public class WorldsMenu  implements Screen {
+public class WorldMenu implements Screen {
     JavaGame JG;
     public Music BackgroundMusic, PushButton, ScreenMove;
-    Texture textureGoIntroInSettings;
     Texture tBg, tGearsPeace, tGearsBody, tBall, t1Box200x300,t1Box300x200;
 
     Texture textureLevelInIntro, textureSettingsInIntro, textureAboutInIntro;
@@ -49,11 +48,16 @@ public class WorldsMenu  implements Screen {
     World world;
     TextButton btnPlay, btnSettings, btnExit;
     public Map<Texture, Ball> ListTextureBall = new HashMap<Texture, Ball>();
-
+    public Map<Texture, Box> ListTextureBoxLeft = new HashMap<Texture, Box>();
+    public Map<Texture, Box> ListTextureBoxRight = new HashMap<Texture, Box>();
+    public Map<Texture, Box> ListTextureBoxDown = new HashMap<Texture, Box>();
 
     Triangle triangle;
     Wall floor;
-    public Ball ballGoIntroInSettings, ball1, ball2, ball3;
+    public Ball ball1, ball2, ball3;
+    public Ball ballBack, ballExit, ballMusic, ballSound;
+    boolean onMusic = true, onSound = true;
+    Texture textureBack, textureExit, textureMusic, textureSound;
     public Ball buttonSettingsInIntro, buttonLevelInIntro, buttonAboutInIntro;
     public Ball buttonIntroInLevel, buttonLevel1InLevel, buttonLevel2InLevel, buttonLevel3InLevel;
     Gear[] gear = new Gear[15];
@@ -61,19 +65,28 @@ public class WorldsMenu  implements Screen {
     Swing swing;
     Arc arc;
     public Box boxDown, boxRight, boxLeft;
+    public Box boxMusicDown, boxMusicRight, boxMusicLeft;
+    Texture textureBoxMusicDown, textureBoxMusicRight, textureBoxMusicLeft;
+    public Box boxSoundDown, boxSoundRight, boxSoundLeft;
+    Texture textureBoxSoundDown, textureBoxSoundRight, textureBoxSoundLeft;
+    public Box boxBackDown, boxBackRight, boxBackLeft;
+    Texture textureBoxBackDown, textureBoxBackRight, textureBoxBackLeft;
+    public Box boxExitDown, boxExitRight, boxExitLeft;
+    Texture textureBoxExitDown, textureBoxExitRight, textureBoxExitLeft;
+
     SensorBox impulseBox, destroyBox;
     float x;
     float speed;
     boolean goScreen, isObjDeleted;
     String fromScreen, toScreen;
     float w, h;
-    long timeLastCreateBox, timeCreateBoxInterval = 25000; //27500
+    long timeLastCreateBox, timeCreateBoxInterval = 26000; //27500
 
 
 
 
 
-    public WorldsMenu(JavaGame context) {
+    public WorldMenu(JavaGame context) {
         // System parameters
         JG = context;
         JG.camera.setToOrtho(false, width, height);
@@ -90,18 +103,72 @@ public class WorldsMenu  implements Screen {
         PushButton.setVolume(1);
 
         BackgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("MusicGame.mp3"));
-        BackgroundMusic.play();
-        BackgroundMusic.setLooping(true);
         BackgroundMusic.setVolume(0.1f);
 
         // Settings objects
-        textureGoIntroInSettings = new Texture(Gdx.files.internal("return.png"));
+
+        boxMusicDown = new Box(world, new float[]{-1.5f, 0.25f, -1.5f, -0.25f, 1.5f, -0.25f, 1.5f, 0.25f}, false, 5f, 5.5f, 0);
+        boxMusicLeft = new Box(world, new float[]{-0.25f, 1f, -0.25f, 0, 0.25f, 0, 0.25f, 1}, false, 3.72f, 5.35f, 0.4f);
+        boxMusicRight = new Box(world, new float[]{-0.25f, 1f, -0.25f, 0, 0.25f, 0, 0.25f, 1}, false, 6.26f, 5.35f, -0.4f);
+        ballMusic = new Ball(world, 5, 7, 0.7f, true);
+        textureBoxMusicDown = new Texture(Gdx.files.internal("musicIcon.png"));
+        textureBoxMusicRight = new Texture(Gdx.files.internal("squareIcon.png"));
+        textureBoxMusicLeft = new Texture(Gdx.files.internal("squareIcon.png"));
+
+        boxSoundDown = new Box(world, new float[]{-1.5f, 0.25f, -1.5f, -0.25f, 1.5f, -0.25f, 1.5f, 0.25f}, false, 11f, 5.5f, 0);
+        boxSoundLeft = new Box(world, new float[]{-0.25f, 1f, -0.25f, 0, 0.25f, 0, 0.25f, 1}, false, 9.72f, 5.35f, 0.4f);
+        boxSoundRight = new Box(world, new float[]{-0.25f, 1f, -0.25f, 0, 0.25f, 0, 0.25f, 1}, false, 12.26f, 5.35f, -0.4f);
+        ballSound = new Ball(world, 11, 7, 0.7f, true);
+        textureBoxSoundDown = new Texture(Gdx.files.internal("soundIcon.png"));
+        textureBoxSoundRight = new Texture(Gdx.files.internal("squareIcon.png"));
+        textureBoxSoundLeft = new Texture(Gdx.files.internal("squareIcon.png"));
+
+        boxBackDown = new Box(world, new float[]{-1.5f, 0.25f, -1.5f, -0.25f, 1.5f, -0.25f, 1.5f, 0.25f}, false, 11f, 2.5f, 0);
+        boxBackLeft = new Box(world, new float[]{-0.25f, 1f, -0.25f, 0, 0.25f, 0, 0.25f, 1}, false, 9.72f, 2.35f, 0.4f);
+        boxBackRight = new Box(world, new float[]{-0.25f, 1f, -0.25f, 0, 0.25f, 0, 0.25f, 1}, false, 12.26f, 2.35f, -0.4f);
+        ballBack = new Ball(world, 11, 4, 0.7f, true);
+        textureBoxBackDown = new Texture(Gdx.files.internal("backIcon.png"));
+        textureBoxBackRight = new Texture(Gdx.files.internal("squareIcon.png"));
+        textureBoxBackLeft = new Texture(Gdx.files.internal("squareIcon.png"));
+
+        boxExitDown = new Box(world, new float[]{-1.5f, 0.25f, -1.5f, -0.25f, 1.5f, -0.25f, 1.5f, 0.25f}, false, 5f, 2.5f, 0);
+        boxExitLeft = new Box(world, new float[]{-0.25f, 1f, -0.25f, 0, 0.25f, 0, 0.25f, 1}, false, 3.72f, 2.35f, 0.4f);
+        boxExitRight = new Box(world, new float[]{-0.25f, 1f, -0.25f, 0, 0.25f, 0, 0.25f, 1}, false, 6.26f, 2.35f, -0.4f);
+        ballExit = new Ball(world, 5, 4, 0.7f, true);
+        textureBoxExitDown = new Texture(Gdx.files.internal("exitIcon.png"));
+        textureBoxExitRight = new Texture(Gdx.files.internal("squareIcon.png"));
+        textureBoxExitLeft = new Texture(Gdx.files.internal("squareIcon.png"));
+
+
+        textureBack = new Texture(Gdx.files.internal("return.png"));
+        textureExit = new Texture(Gdx.files.internal("exit.png"));
+        textureMusic = new Texture(Gdx.files.internal("soundOn.png"));
+        textureSound = new Texture(Gdx.files.internal("soundOn.png"));
+
+        ListTextureBoxDown.put(textureBoxMusicDown, boxMusicDown);
+        ListTextureBoxLeft.put(textureBoxMusicLeft, boxMusicLeft);
+        ListTextureBoxRight.put(textureBoxMusicRight, boxMusicRight);
+
+        ListTextureBoxDown.put(textureBoxSoundDown, boxSoundDown);
+        ListTextureBoxLeft.put(textureBoxSoundLeft, boxSoundLeft);
+        ListTextureBoxRight.put(textureBoxSoundRight, boxSoundRight);
+
+        ListTextureBoxDown.put(textureBoxExitDown, boxExitDown);
+        ListTextureBoxLeft.put(textureBoxExitLeft, boxExitLeft);
+        ListTextureBoxRight.put(textureBoxExitRight, boxExitRight);
+
+        ListTextureBoxDown.put(textureBoxBackDown, boxBackDown);
+        ListTextureBoxLeft.put(textureBoxBackLeft, boxBackLeft);
+        ListTextureBoxRight.put(textureBoxBackRight, boxBackRight);
+
+
+
+
         floor = new Wall(world, 8, 0, 16, 0f);
         floor = new Wall(world, 8, 9, 16, 0f);
         floor = new Wall(world, 9.6f, 8, 8, 0f);
         floor = new Wall(world, 0, 4.5f, 0f, 9);
         floor = new Wall(world, 1, 4.2f, 0f, 3.2f);
-        ballGoIntroInSettings = new Ball(world, 3, 7, 0.4f, false);
 
         ball1 = new Ball(world, 7.2f, 0.5f, 0.2f, true);
         ball1.body.setLinearVelocity(-4, 0);
@@ -116,7 +183,8 @@ public class WorldsMenu  implements Screen {
         impulseBox = new SensorBox(world, 5, 0.5f, 2.5f, 0.5f, ball1.body, "Left");
         impulseBox = new SensorBox(world, 5, 8.5f, 2.5f, 0.5f, ball1.body, "Right");
         impulseBox = new SensorBox(world, 0f, 0.5f, 0.3f, 2.5f, ball1.body, "Up");
-        ListTextureBall.put(textureGoIntroInSettings, ballGoIntroInSettings);
+        ListTextureBall.put(textureBack, ballBack);
+        ListTextureBall.put(textureExit, ballExit);
 
         //Intro objects
         x = 16;
@@ -137,9 +205,9 @@ public class WorldsMenu  implements Screen {
         buttonSettingsInIntro = new Ball(world, 6+x, 3.5f, 0.4f, false);
         buttonAboutInIntro = new Ball(world, 10+x, 3.5f, 0.4f, false);
 
-        boxDown = new Box(world, new float[]{-1.5f, 0.25f, -1.5f, -0.25f, 1.5f, -0.25f, 1.5f, 0.25f}, true, 18.25f, 6.75f);
-        boxRight = new Box(world, new float[]{-0.25f, 1f, -0.25f, 0, 0.25f, 0, 0.25f, 1}, true, 17f, 6.5f);
-        boxLeft = new Box(world, new float[]{-0.25f, 1f, -0.25f, 0, 0.25f, 0, 0.25f, 1}, true, 19.5f, 6.5f);
+        boxDown = new Box(world, new float[]{-1.5f, 0.25f, -1.5f, -0.25f, 1.5f, -0.25f, 1.5f, 0.25f}, true, 17.75f, 6.75f, 0);
+        boxRight = new Box(world, new float[]{-0.25f, 1f, -0.25f, 0, 0.25f, 0, 0.25f, 1}, true, 16.5f, 6.5f, 0);
+        boxLeft = new Box(world, new float[]{-0.25f, 1f, -0.25f, 0, 0.25f, 0, 0.25f, 1}, true, 19f, 6.5f, 0);
 
         WeldJointDef rjd = new WeldJointDef();
         rjd.collideConnected = false;
@@ -175,11 +243,11 @@ public class WorldsMenu  implements Screen {
         floor = new Wall(world, 8+x, 0, 16, 0f);
         floor = new Wall(world, 8+x, 9, 16, 0f);
         floor = new Wall(world, 16+x, 4.5f, 0f, 9);
-        impulseBox = new SensorBox(world, 12+x, 5.5f, 2.5f, 0.5f, ball1.body, "Right");
-        buttonIntroInLevel = new Ball(world, 15+x, 1, 0.5f, false);
-        buttonLevel1InLevel = new Ball(world, 2+x, 3, 0.5f, false);
-        buttonLevel2InLevel = new Ball(world, 4+x, 3, 0.5f, false);
-        buttonLevel3InLevel = new Ball(world, 6+x, 3, 0.5f, false);
+        //impulseBox = new SensorBox(world, 12+x, 5.5f, 2.5f, 0.5f, ball1.body, "Right");
+        buttonIntroInLevel = new Ball(world, 15+x, 0.8f, 0.5f, false);
+        buttonLevel1InLevel = new Ball(world, 3+x, 2, 0.8f, false);
+        buttonLevel2InLevel = new Ball(world, 7+x, 3, 0.8f, false);
+        buttonLevel3InLevel = new Ball(world, 10+x, 5, 0.8f, false);
         float h = 6f, r1 = 0;
         float count = 0;
         for (int i = 0; i < 12; i++) {
@@ -198,29 +266,58 @@ public class WorldsMenu  implements Screen {
 
     @Override
     public void show() {
-        JG.camera.position.set(w /2, h/2, 0);
+        JG.camera.position.set(w/2, h/2, 0);
         timeLastCreateBox = TimeUtils.millis();
     }
 
     @Override
     public void render(float delta) {
+        if (onMusic) {
+            BackgroundMusic.play();
+            BackgroundMusic.setLooping(true);
+        } else {
+            BackgroundMusic.stop();
+        }
+
         if (timeLastCreateBox + timeCreateBoxInterval < TimeUtils.millis() && !isObjDeleted) {
             world.destroyBody(boxDown.body);
             world.destroyBody(boxRight.body);
             world.destroyBody(boxLeft.body);
+            //box1 = new Box(world, new float[]{0.8f+x-0.5f, 7.5f, 0.8f+x-0.5f, 7f, 3.8f+x-0.5f, 7f, 3.8f+x-0.5f, 7.5f}, true);
+            boxDown = new Box(world, new float[]{-1.5f, 0.25f, -1.5f, -0.25f, 1.5f, -0.25f, 1.5f, 0.25f}, true, 180.25f, 6.75f, 0);
+            //box2 = new Box(world, new float[]{0.8f+x-0.5f, 8f, 0.8f+x-0.5f, 7f, 0.8f+x, 7f, 0.8f+x, 8f}, true);
+            boxRight = new Box(world, new float[]{-0.25f, 1f, -0.25f, 0, 0.25f, 0, 0.25f, 1}, true, 170f, 6.5f, 0);
+            //box3 = new Box(world, new float[]{3.3f+x-0.5f, 8f, 3.3f+x-0.5f, 7f, 3.3f+x, 7f, 3.3f+x, 8f}, true);
+            boxLeft = new Box(world, new float[]{-0.25f, 1f, -0.25f, 0, 0.25f, 0, 0.25f, 1}, true, 190.5f, 6.5f, 0);
+
+            WeldJointDef rjd = new WeldJointDef();
+            rjd.collideConnected = false;
+            rjd.bodyA = boxDown.body;
+            rjd.bodyB = boxRight.body;
+            rjd.localAnchorA.set(1.25f, 0);
+            rjd.localAnchorB.set(0, 0.25f);
+            world.createJoint(rjd);
+
+            WeldJointDef rjd1 = new WeldJointDef();
+            rjd1.collideConnected = false;
+            rjd1.bodyA = boxDown.body;
+            rjd1.bodyB = boxLeft.body;
+            rjd1.localAnchorA.set(-1.25f, 0);
+            rjd1.localAnchorB.set(0, 0.25f);
+            world.createJoint(rjd1);
             isObjDeleted = true;
         }
 
-        if (timeLastCreateBox + timeCreateBoxInterval + 6600  < TimeUtils.millis()) {
+        if (timeLastCreateBox + timeCreateBoxInterval + 11000  < TimeUtils.millis()) {
             isObjDeleted = false;
             timeLastCreateBox = TimeUtils.millis();
             x = 16;
             //box1 = new Box(world, new float[]{0.8f+x-0.5f, 7.5f, 0.8f+x-0.5f, 7f, 3.8f+x-0.5f, 7f, 3.8f+x-0.5f, 7.5f}, true);
-            boxDown = new Box(world, new float[]{-1.5f, 0.25f, -1.5f, -0.25f, 1.5f, -0.25f, 1.5f, 0.25f}, true, 18.25f, 6.75f);
+            boxDown = new Box(world, new float[]{-1.5f, 0.25f, -1.5f, -0.25f, 1.5f, -0.25f, 1.5f, 0.25f}, true, 18.25f, 6.75f, 0);
             //box2 = new Box(world, new float[]{0.8f+x-0.5f, 8f, 0.8f+x-0.5f, 7f, 0.8f+x, 7f, 0.8f+x, 8f}, true);
-            boxRight = new Box(world, new float[]{-0.25f, 1f, -0.25f, 0, 0.25f, 0, 0.25f, 1}, true, 17f, 6.5f);
+            boxRight = new Box(world, new float[]{-0.25f, 1f, -0.25f, 0, 0.25f, 0, 0.25f, 1}, true, 17f, 6.5f, 0);
             //box3 = new Box(world, new float[]{3.3f+x-0.5f, 8f, 3.3f+x-0.5f, 7f, 3.3f+x, 7f, 3.3f+x, 8f}, true);
-            boxLeft = new Box(world, new float[]{-0.25f, 1f, -0.25f, 0, 0.25f, 0, 0.25f, 1}, true, 19.5f, 6.5f);
+            boxLeft = new Box(world, new float[]{-0.25f, 1f, -0.25f, 0, 0.25f, 0, 0.25f, 1}, true, 19.5f, 6.5f, 0);
 
             WeldJointDef rjd = new WeldJointDef();
             rjd.collideConnected = false;
@@ -245,7 +342,7 @@ public class WorldsMenu  implements Screen {
         world.step(1/60f,6,2);
         JG.camera.update();
         //JG.debugRenderer2.render(world,JG.camera.combined);
-        //JG.debugRenderer.render(world,JG.camera.combined);
+        JG.debugRenderer.render(world,JG.camera.combined);
 
         if (goScreen){
             speed += 0.3;
@@ -291,11 +388,34 @@ public class WorldsMenu  implements Screen {
         JG.batch.begin();
         JG.batch.draw(tBg,0, 0, w, h);
 
+        for (Texture i : ListTextureBoxLeft.keySet()) {
+            JG.batch.draw(i,
+                    ListTextureBoxLeft.get(i).getX()- ListTextureBoxLeft.get(i).width/2,
+                    ListTextureBoxLeft.get(i).getY(),
+                    ListTextureBoxLeft.get(i).width/2,0, ListTextureBoxLeft.get(i).width, ListTextureBoxLeft.get(i).height, 1,1,
+                    ListTextureBoxLeft.get(i).body.getAngle()* MathUtils.radiansToDegrees,
+                    0,0, 100,100, true,false);
+        }
+        for (Texture i : ListTextureBoxRight.keySet()) {
+            JG.batch.draw(i,
+                    ListTextureBoxRight.get(i).getX()- ListTextureBoxRight.get(i).width/2,
+                    ListTextureBoxRight.get(i).getY(),
+                    ListTextureBoxRight.get(i).width/2,0, ListTextureBoxRight.get(i).width, ListTextureBoxRight.get(i).height, 1,1,
+                    ListTextureBoxRight.get(i).body.getAngle()* MathUtils.radiansToDegrees,
+                    0,0, 100,100, false,false);
+        }
+        for (Texture i : ListTextureBoxDown.keySet()) {
+            JG.batch.draw(i,
+                    ListTextureBoxDown.get(i).getX()- ListTextureBoxDown.get(i).width/2-0.18f, ListTextureBoxDown.get(i).getY()- ListTextureBoxDown.get(i).height/2,
+                    0,0, ListTextureBoxDown.get(i).width+0.35f, ListTextureBoxDown.get(i).height, 1,1, 0,
+                    0,0, 600,100, true,false);
+        }
+
+
         JG.batch.draw(t1Box200x300, boxRight.getX()- boxRight.width/2, boxRight.getY(),
                 boxRight.width/2,0, boxRight.width, boxRight.height, 1,1,
                 boxRight.body.getAngle()* MathUtils.radiansToDegrees,
                 0,0, 200,300, false,false);
-
 
         JG.batch.draw(t1Box200x300, boxLeft.getX()- boxLeft.width/2, boxLeft.getY(),
                 boxLeft.width/2,0, boxLeft.width, boxLeft.height, 1,1,
@@ -337,67 +457,120 @@ public class WorldsMenu  implements Screen {
             touch.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             JG.camera.unproject(touch);
             if (buttonSettingsInIntro.hit(touch.x, touch.y)) {
-                PushButton.play();
-                ScreenMove.play();
+                if (onSound){
+                    PushButton.play();
+                    ScreenMove.play();
+                }
                 fromScreen = "Intro";
                 toScreen = "Settings";
                 goScreen = true;
                 //JG.camera.position.set(w/6, h/2, 0);
             }
             if (buttonAboutInIntro.hit(touch.x, touch.y)) {
-                PushButton.play();
-                ScreenMove.play();
-                fromScreen = "Intro";
-                toScreen = "About";
-                goScreen = true;
-                //camera.position.set(w/6, h/2, 0);
+                if (onSound){
+                    PushButton.play();
+                }
+                JG.setScreen(JG.worldGame);
             }
             if (buttonLevelInIntro.hit(touch.x, touch.y)) {
-                PushButton.play();
-                ScreenMove.play();
+                if (onSound){
+                    PushButton.play();
+                    ScreenMove.play();
+                }
                 fromScreen = "Intro";
                 toScreen = "Level";
                 goScreen = true;
                 //JG.camera.position.set(w/1.2f, h/2, 0);
             }
 
-            if (ballGoIntroInSettings.hit(touch.x, touch.y)) {
-                PushButton.play();
-                ScreenMove.play();
+            if (ballBack.hit(touch.x, touch.y)) {
+                ballBack.body.applyLinearImpulse(0, 10, ballBack.body.getPosition().x, ballBack.body.getPosition().y, true);
+                if (onSound){
+                    PushButton.play();
+                    ScreenMove.play();
+                }
                 fromScreen = "Settings";
                 toScreen = "Intro";
                 goScreen = true;
                 //JG.camera.position.set(w/2, h/2, 0);
             }
-
             if (buttonLevel1InLevel.hit(touch.x, touch.y)) {
-                PushButton.play();
-                ScreenMove.play();
+                if (onSound){
+                    PushButton.play();
+                }
                 JG.setScreen(JG.level1);
             }
             if (buttonLevel2InLevel.hit(touch.x, touch.y)) {
-                PushButton.play();
-                ScreenMove.play();
+                if (onSound){
+                    PushButton.play();
+                }
                 JG.setScreen(JG.level2);
             }
             if (buttonLevel3InLevel.hit(touch.x, touch.y)) {
-                PushButton.play();
-                ScreenMove.play();
+                if (onSound){
+                    PushButton.play();
+                }
                 JG.setScreen(JG.level3);
             }
             if (buttonIntroInLevel.hit(touch.x, touch.y)) {
-                PushButton.play();
-                ScreenMove.play();
+                if (onSound){
+                    PushButton.play();
+                    ScreenMove.play();
+                }
                 fromScreen = "Level";
                 toScreen = "Intro";
                 goScreen = true;
                 //JG.camera.position.set(w/2, h/2, 0);
             }
+            if (ballMusic.hit(touch.x, touch.y)) {
+                if (onSound){
+                    PushButton.play();
+                }
+                ballMusic.body.applyLinearImpulse(0, 10, ballMusic.body.getPosition().x, ballMusic.body.getPosition().y, true);
+                if (onMusic){
+                    onMusic = false;
+                    textureMusic = new Texture(Gdx.files.internal("soundOf.png"));
+                } else {
+                    onMusic = true;
+                    textureMusic = new Texture(Gdx.files.internal("soundOn.png"));
+                }
+
+            }
+            if (ballSound.hit(touch.x, touch.y)) {
+                if (onSound){
+                    PushButton.play();
+                }
+                ballSound.body.applyLinearImpulse(0, 10, ballSound.body.getPosition().x, ballSound.body.getPosition().y, true);
+                if (onSound){
+                    onSound = false;
+                    textureSound = new Texture(Gdx.files.internal("soundOf.png"));
+                } else {
+                    onSound = true;
+                    textureSound = new Texture(Gdx.files.internal("soundOn.png"));
+                }
+
+            }
+            if (ballExit.hit(touch.x, touch.y)) {
+                if (onSound){
+                    PushButton.play();
+                }
+                Gdx.app.exit();
+
+            }
 
 
         }
 
-
+        JG.batch.draw(textureSound,
+                ballSound.body.getPosition().x- ballSound.r,
+                ballSound.body.getPosition().y- ballSound.r,
+                0, ballSound.r*2, ballSound.r*2, ballSound.r*2,
+                1,1,0,0,0,100,100,false,false);
+        JG.batch.draw(textureMusic,
+                ballMusic.body.getPosition().x- ballMusic.r,
+                ballMusic.body.getPosition().y- ballMusic.r,
+                0, ballMusic.r*2, ballMusic.r*2, ballMusic.r*2,
+                1,1,0,0,0,100,100,false,false);
 
         for (Texture i : ListTextureBall.keySet()) {
             JG.batch.draw(i,
@@ -431,5 +604,6 @@ public class WorldsMenu  implements Screen {
 
     @Override
     public void dispose() {
+        world.dispose();
     }
 }

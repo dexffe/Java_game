@@ -92,6 +92,13 @@ public class level3 implements Screen{
         tGearsBody = new Texture("gear.png");
         ellipse = new Ellipse(world, 1f, 5, true);
 
+
+        ballLeft = new Ball(world, 1f, 0.75f, 0.4f, false);
+        ballRight = new Ball(world, 2.5f, 0.75f, 0.4f, false);
+        ballUp = new Ball(world, 14.5f, 0.75f, 0.4f, false);
+
+        buttonPause = new Ball(world, 15.5f, 8.5f, 0.3f, false);
+        tGearsBody = new Texture("gear.png");
     }
 
     @Override
@@ -166,7 +173,7 @@ public class level3 implements Screen{
             JG.camera.unproject(JG.touch);
             if (buttonPause.hit(JG.touch.x, JG.touch.y)) {
                 //pause();
-                JG.setScreen(JG.worldsMenu);
+                JG.setScreen(JG.worldMenu);
             }
         }
         ScreenUtils.clear(0,0,0,1);
