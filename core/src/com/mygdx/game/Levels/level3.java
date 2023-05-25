@@ -71,7 +71,7 @@ public class level3 implements Screen{
 
         floor = new Wall(world, width/2, 1.5f, 16, 0);
 
-        box = new Box(world, new float[]{0, 1.5f, 2f, 1.5f, 2.5f, 4, 0, 4.5f}, false, 0, 0);
+        box = new Box(world, new float[]{0, 1.5f, 2f, 1.5f, 2.5f, 4, 0, 4.5f}, false, 0, 0, 0);
 
 
         //gear = new Gear(world, 0, 4.5f, 3, true, 0.6f, -10, 50 , 50);

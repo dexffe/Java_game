@@ -470,7 +470,7 @@ public class WorldMenu implements Screen {
                 if (onSound){
                     PushButton.play();
                 }
-                JG.setScreen(JG.worldGame);
+                JG.setScreen(JG.worldAbout);
             }
             if (buttonLevelInIntro.hit(touch.x, touch.y)) {
                 if (onSound){

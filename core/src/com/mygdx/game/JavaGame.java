@@ -49,7 +49,7 @@ public class JavaGame extends Game {
 		level2 = new level2(this);
 		level3 = new level3(this);
 
-		setScreen(worldMenu);
+		setScreen(level1);
 	}
 
 

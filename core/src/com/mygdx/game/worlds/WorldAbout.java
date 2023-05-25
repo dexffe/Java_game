@@ -6,41 +6,57 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.game.JavaGame;
+import com.mygdx.game.objects.Ball;
 
 public class WorldAbout implements Screen {
     JavaGame JG;
     float w = 16, h = 9;
-    Texture texture;
+    Texture texture, textureBall;
     World world;
     OrthographicCamera camera;
     SpriteBatch batch;
+    Ball ball;
+    Vector3 touch;
 
     public WorldAbout(JavaGame context) {
+        JG = context;
         world = new World(new Vector2(0, -10), false);
-        camera = new OrthographicCamera();
-        camera.setToOrtho(false, w, h);
-        batch = new SpriteBatch();
+
     }
 
     @Override
     public void show() {
-        camera.position.set(w, h/2, 0);
-        texture = new Texture(Gdx.files.internal("pause.png"));
+        JG.camera.setToOrtho(false, w, h);
+        texture = new Texture(Gdx.files.internal("aboutText.png"));
+        textureBall = new Texture(Gdx.files.internal("return.png"));
+        ball = new Ball(world, 1, 8, 0.7f, false);
     }
 
     @Override
     public void render(float delta) {
-
+        if (Gdx.input.justTouched()) {
+            JG.touch.set(Gdx.input.getX(), Gdx.input.getY(), 0);
+            JG.camera.unproject(JG.touch);
+            if (ball.hit(JG.touch.x, JG.touch.y)) {
+                JG.setScreen(JG.worldMenu);
+            }
+        }
         ScreenUtils.clear(0,0,0,1);
-        camera.update();
+        JG.camera.update();
         // Отрисовываем спрайт
-        batch.setProjectionMatrix(camera.combined);
-        batch.begin();
-        //batch.draw(texture,0, 0, w, h);
-        batch.end();
+        JG.batch.setProjectionMatrix(JG.camera.combined);
+        JG.batch.begin();
+        JG.batch.draw(texture,0, 0, w, h);
+        JG.batch.draw(textureBall,
+                ball.body.getPosition().x- ball.r,
+                ball.body.getPosition().y- ball.r,
+                0, ball.r*2, ball.r*2, ball.r*2,
+                1,1,0,0,0,100,100,false,false);
+        JG.batch.end();
     }
 
     @Override
@@ -65,6 +81,5 @@ public class WorldAbout implements Screen {
     @Override
     public void dispose() {
         world.dispose();
-        batch.dispose();
     }
 }
