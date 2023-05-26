@@ -69,10 +69,10 @@ public class WorldMenu implements Screen {
     Texture textureBoxMusicDown, textureBoxMusicRight, textureBoxMusicLeft;
     public Box boxSoundDown, boxSoundRight, boxSoundLeft;
     Texture textureBoxSoundDown, textureBoxSoundRight, textureBoxSoundLeft;
-    public Box boxBackDown, boxBackRight, boxBackLeft;
+    public Box boxBackDown, boxBackRight, boxBackLeft, boxStop;
     Texture textureBoxBackDown, textureBoxBackRight, textureBoxBackLeft;
     public Box boxExitDown, boxExitRight, boxExitLeft;
-    Texture textureBoxExitDown, textureBoxExitRight, textureBoxExitLeft;
+    Texture textureBoxExitDown, textureBoxExitRight, textureBoxExitLeft, textureBoxStart;
 
     SensorBox impulseBox, destroyBox;
     float x;
@@ -197,6 +197,8 @@ public class WorldMenu implements Screen {
         tBall = new Texture("Ball.png");
         t1Box200x300 = new Texture("1box200x300.png");
         t1Box300x200 = new Texture("1box300x200.png");
+        textureBoxStart = new Texture("2box300x300.png");
+
         floor = new Wall(world, 8+x, 0, 16, 0f);
         floor = new Wall(world, 8+x, 9, 16, 0f);
         floor = new Wall(world, 2+x, 8, 4, 0f);
@@ -204,6 +206,7 @@ public class WorldMenu implements Screen {
         buttonLevelInIntro = new Ball(world, 8+x, 3.5f, 1f, false);
         buttonSettingsInIntro = new Ball(world, 6+x, 3.5f, 0.4f, false);
         buttonAboutInIntro = new Ball(world, 10+x, 3.5f, 0.4f, false);
+        boxStop = new Box(world, new float[]{-0.5f, -0.5f, 0.5f, -0.5f, 0.5f, 0.5f, -0.5f, 0.5f}, false, 24, 8.5f, 0);
 
         boxDown = new Box(world, new float[]{-1.5f, 0.25f, -1.5f, -0.25f, 1.5f, -0.25f, 1.5f, 0.25f}, true, 17.75f, 6.75f, 0);
         boxRight = new Box(world, new float[]{-0.25f, 1f, -0.25f, 0, 0.25f, 0, 0.25f, 1}, true, 16.5f, 6.5f, 0);
@@ -342,7 +345,7 @@ public class WorldMenu implements Screen {
         world.step(1/60f,6,2);
         JG.camera.update();
         //JG.debugRenderer2.render(world,JG.camera.combined);
-        JG.debugRenderer.render(world,JG.camera.combined);
+        if (JG.renderOn) JG.debugRenderer.render(world,JG.camera.combined);
 
         if (goScreen){
             speed += 0.3;
@@ -387,7 +390,12 @@ public class WorldMenu implements Screen {
         JG.batch.setProjectionMatrix(JG.camera.combined);
         JG.batch.begin();
         JG.batch.draw(tBg,0, 0, w, h);
-
+        JG.batch.draw(textureBoxStart,
+                boxStop.getX()-0.5f,
+                boxStop.getY()-0.5f,
+                0,0, 1, 1, 1,1,
+                0,
+                0,0, 300,300, true,false);
         for (Texture i : ListTextureBoxLeft.keySet()) {
             JG.batch.draw(i,
                     ListTextureBoxLeft.get(i).getX()- ListTextureBoxLeft.get(i).width/2,

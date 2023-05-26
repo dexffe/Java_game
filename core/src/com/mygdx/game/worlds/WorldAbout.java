@@ -15,11 +15,11 @@ import com.mygdx.game.objects.Ball;
 public class WorldAbout implements Screen {
     JavaGame JG;
     float w = 16, h = 9;
-    Texture texture, textureBall;
+    Texture texture, textureBall, textureRender;
     World world;
     OrthographicCamera camera;
     SpriteBatch batch;
-    Ball ball;
+    Ball ball, ballRender;
     Vector3 touch;
 
     public WorldAbout(JavaGame context) {
@@ -33,7 +33,9 @@ public class WorldAbout implements Screen {
         JG.camera.setToOrtho(false, w, h);
         texture = new Texture(Gdx.files.internal("aboutText.png"));
         textureBall = new Texture(Gdx.files.internal("return.png"));
+        textureRender = new Texture(Gdx.files.internal("about.png"));
         ball = new Ball(world, 1, 8, 0.7f, false);
+        ballRender = new Ball(world, 15.5f, 8.5f, 0.3f, false);
     }
 
     @Override
@@ -43,6 +45,9 @@ public class WorldAbout implements Screen {
             JG.camera.unproject(JG.touch);
             if (ball.hit(JG.touch.x, JG.touch.y)) {
                 JG.setScreen(JG.worldMenu);
+            }
+            if (ballRender.hit(JG.touch.x, JG.touch.y)) {
+                JG.renderOn = !JG.renderOn;
             }
         }
         ScreenUtils.clear(0,0,0,1);
@@ -55,6 +60,11 @@ public class WorldAbout implements Screen {
                 ball.body.getPosition().x- ball.r,
                 ball.body.getPosition().y- ball.r,
                 0, ball.r*2, ball.r*2, ball.r*2,
+                1,1,0,0,0,100,100,false,false);
+        JG.batch.draw(textureRender,
+                ballRender.body.getPosition().x- ballRender.r,
+                ballRender.body.getPosition().y- ballRender.r,
+                0, ballRender.r*2, ballRender.r*2, ballRender.r*2,
                 1,1,0,0,0,100,100,false,false);
         JG.batch.end();
     }

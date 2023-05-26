@@ -74,8 +74,8 @@ public class level3 implements Screen{
         box = new Box(world, new float[]{0, 1.5f, 2f, 1.5f, 2.5f, 4, 0, 4.5f}, false, 0, 0, 0);
 
 
-        //gear = new Gear(world, 0, 4.5f, 3, true, 0.6f, -10, 50 , 50);
-        //gear1 = new Gear(world, 0, 9f, 3.5f, true, 1f, 10, 50 , 50);
+        gear = new Gear(world, 0, 4.5f, 3, true, 0.6f, -10, 50 , 50);
+        gear1 = new Gear(world, 0, 9f, 3.5f, true, 1f, 10, 50 , 50);
 
 
 
@@ -185,10 +185,10 @@ public class level3 implements Screen{
         // Отрисовываем спрайт
         JG.batch.setProjectionMatrix(JG.camera.combined);
         JG.batch.begin();
-        //JG.batch.draw(tGearsBody, gear.basis.getPosition().x*2 - gear.res/2, gear.basis.getPosition().y*2 - gear.res/2,
-        //        gear.res/2,gear.res/2, gear.res,gear.res, 3f,3f, gear.box.getAngle()* MathUtils.radiansToDegrees, 0,0, 500,500, false,false);
-        //JG.batch.draw(tGearsBody, gear1.basis.getPosition().x*2 - gear1.res/2, gear1.basis.getPosition().y*2 - gear1.res/2,
-        //        gear1.res/2,gear1.res/2, gear1.res,gear1.res, 3f,3f, gear1.box.getAngle()* MathUtils.radiansToDegrees, 0,0, 500,500, false,false);
+        JG.batch.draw(tGearsBody, gear.basis.getPosition().x*2 - gear.res/2, gear.basis.getPosition().y*2 - gear.res/2,
+                gear.res/2,gear.res/2, gear.res,gear.res, 3f,3f, gear.box.getAngle()* MathUtils.radiansToDegrees, 0,0, 500,500, false,false);
+        JG.batch.draw(tGearsBody, gear1.basis.getPosition().x*2 - gear1.res/2, gear1.basis.getPosition().y*2 - gear1.res/2,
+                gear1.res/2,gear1.res/2, gear1.res,gear1.res, 3f,3f, gear1.box.getAngle()* MathUtils.radiansToDegrees, 0,0, 500,500, false,false);
         JG.batch.draw(texturePause,
                 buttonPause.body.getPosition().x- buttonPause.r,
                 buttonPause.body.getPosition().y- buttonPause.r,

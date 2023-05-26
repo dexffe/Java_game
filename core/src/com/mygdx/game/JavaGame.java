@@ -20,9 +20,8 @@ public class JavaGame extends Game {
 	public Vector3 touch;
 
 	public WorldAbout worldAbout;
-	public WorldAbout worldGame;
 	public WorldMenu worldMenu;
-
+	public boolean renderOn;
 
 
 	public level1 level1;
@@ -48,8 +47,7 @@ public class JavaGame extends Game {
 		level1 = new level1(this);
 		level2 = new level2(this);
 		level3 = new level3(this);
-
-		setScreen(level1);
+		setScreen(worldMenu);
 	}
 
 

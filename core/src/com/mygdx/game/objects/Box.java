@@ -14,7 +14,8 @@ public class Box {
     public float width, height;
 
     public Box(World world, float[] vertices, boolean dynamic, float x, float y, float angle){
-
+        height = vertices[1]-vertices[3];
+        width = vertices[0]-vertices[6];
         PolygonShape shape = new PolygonShape();
         shape.set(vertices);
         //shape.setAsBox();
@@ -37,8 +38,6 @@ public class Box {
         body.createFixture(fixtureDef);
         shape.dispose();
 
-        height = vertices[1]-vertices[3];
-        width = vertices[0]-vertices[6];
     }
 
     public float getX(){
