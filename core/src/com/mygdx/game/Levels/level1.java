@@ -159,7 +159,7 @@ public class level1 implements Screen{
             JG.touch.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             JG.camera.unproject(JG.touch);
             if (buttonPause.hit(JG.touch.x, JG.touch.y)) {
-                tCause = new Texture(Gdx.files.internal("block.png"));
+                tCause = new Texture(Gdx.files.internal("pauseLabel.png"));
                 tPlay = new Texture(Gdx.files.internal("start.png"));
                 pause();
                 spawnMenu();
@@ -289,16 +289,16 @@ public class level1 implements Screen{
             JG.batch.draw(textureBackground,0, 0, width, height);
             JG.batch.draw(texturePauseCause,
                     boxPauseCause.getX()-4,
-                    boxPauseCause.getY()-0.75f,
-                    0,0, 8, 1.5f, 1,1,
+                    boxPauseCause.getY()-3.5f,
+                    0,0, 8, 4f, 1,1,
                     0,
-                    0,0, 800,150, false,false);
-            JG.batch.draw(texturePauseBackground,
-                    boxPauseBackground.getX()-4,
-                    boxPauseBackground.getY()-2,
-                    0,0, 8, 2.5f, 1,1,
-                    0,
-                    0,0, 800,150, false,false);
+                    0,0, 800,400, false,false);
+            //JG.batch.draw(texturePauseBackground,
+            //        boxPauseBackground.getX()-4,
+            //        boxPauseBackground.getY()-2,
+            //        0,0, 8, 2.5f, 1,1,
+            //        0,
+            //        0,0, 800,150, false,false);
             JG.batch.draw(texturePauseBallMenu,
                     ballPauseMenu.body.getPosition().x- ballPauseMenu.r,
                     ballPauseMenu.body.getPosition().y- ballPauseMenu.r,
@@ -356,16 +356,16 @@ public class level1 implements Screen{
         win = false;
     }
     void dead() {
-        tCause = new Texture(Gdx.files.internal("block.png"));
+        tCause = new Texture(Gdx.files.internal("defeatLabel.png"));
         tPlay = new Texture(Gdx.files.internal("return.png"));
     }
     void win() {
-        tCause = new Texture(Gdx.files.internal("block.png"));
+        tCause = new Texture(Gdx.files.internal("winLabel.png"));
         tPlay = new Texture(Gdx.files.internal("start.png"));
     }
     void spawnMenu(){
+        //texturePauseBackground = new Texture(Gdx.files.internal("block.png"));
         texturePauseCause = new Texture(Gdx.files.internal(String.valueOf(tCause)));
-        texturePauseBackground = new Texture(Gdx.files.internal("block.png"));
         texturePauseBallPlay = new Texture(Gdx.files.internal(String.valueOf(tPlay)));
         texturePauseBallMenu = new Texture(Gdx.files.internal("mapMenung.png"));
 
