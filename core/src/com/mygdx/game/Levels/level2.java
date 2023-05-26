@@ -35,7 +35,7 @@ public class level2 implements Screen{
      boolean destroyEllipse;
 
     Texture texturePause, tGearsBody;
-    Texture tWatermelon;
+    Texture textureWatermelon, textureButtonRight, textureButtonLeft, textureButtonUp;
     Sprite sprite;
     SpriteBatch batch;
     TextButton btnPlay, btnSettings, btnExit;
@@ -57,6 +57,9 @@ public class level2 implements Screen{
         world = new World(new Vector2(0, -10), false);
         JG = context;
         texturePause = new Texture(Gdx.files.internal("pause.png"));
+        textureButtonRight = new Texture(Gdx.files.internal("arrowRight.png"));
+        textureButtonLeft = new Texture(Gdx.files.internal("arrowLeft.png"));
+        textureButtonUp = new Texture(Gdx.files.internal("arrowUp.png"));
 
 
         floor = new Wall(world, width/2, height, 16, 0f);
@@ -66,11 +69,16 @@ public class level2 implements Screen{
 
         floor = new Wall(world, width/2, 1.5f, 16, 0);
 
-        box = new Box(world, new float[]{5, 1.5f, 10, 1.5f, 10, 3f, 5, 3f}, false);
-        box = new Box(world, new float[]{6.5f, 3f, 8.5f, 3f, 8.5f, 3.5f, 6.5f, 3.5f}, false);
-        box = new Box(world, new float[]{14, 1.5f, 16, 1.5f, 13, 5.5f, 16, 5.5f}, false);
+        box = new Box(world, new float[]{5, 1.5f, 10, 1.5f, 10, 3f, 5, 3f}, false, 0, 0, 0);
+        box = new Box(world, new float[]{6.5f, 3f, 8.5f, 3f, 8.5f, 3.5f, 6.5f, 3.5f}, false, 0, 0, 0);
+        box = new Box(world, new float[]{14, 1.5f, 16, 1.5f, 13, 5.5f, 16, 5.5f}, false, 0, 0, 0);
 
         //gear = new Gear(world, 0, 7.5f, 4, true, 0.3f, -10, 50 , 50);
+
+
+
+
+        gear = new Gear(world, 0, 7.5f, 4, true, 0.3f, -10, 50 , 50);
 
 
 
@@ -90,7 +98,7 @@ public class level2 implements Screen{
         JG.camera.setToOrtho(false, width, height);
         //JG.camera.position.set(width, height/2, 0);
         ellipse = new Ellipse(world, 1.5f, 3, true);
-        tWatermelon = new Texture("watermelon.png");
+        textureWatermelon = new Texture("watermelon.png");
         sensorDead = new SensorBox(world, 8, 2f, 5f, 0.5f, ellipse.ovalBody, "Dead");
 
 
@@ -137,7 +145,7 @@ public class level2 implements Screen{
         });
         if (destroyEllipse) {
             world.destroyBody(ellipse.ovalBody);
-            tWatermelon.dispose();
+            textureWatermelon.dispose();
             destroyEllipse = false;
         }
         if (Gdx.input.justTouched()) {
@@ -145,7 +153,7 @@ public class level2 implements Screen{
             JG.camera.unproject(JG.touch);
             if (buttonPause.hit(JG.touch.x, JG.touch.y)) {
                 //pause();
-                JG.setScreen(JG.worldsMenu);
+                JG.setScreen(JG.worldMenu);
             }
         }
         if (Gdx.input.isTouched()) {
@@ -163,7 +171,6 @@ public class level2 implements Screen{
                 }
             }
         }
-
         ScreenUtils.clear(0,0,0,1);
         if (!pause)world.step(1/60f,6,2);
         //JG.camera.update();
@@ -173,18 +180,32 @@ public class level2 implements Screen{
         // Отрисовываем спрайт
         JG.batch.setProjectionMatrix(JG.camera.combined);
         JG.batch.begin();
-        //JG.batch.draw(tGearsBody, gear.basis.getPosition().x*2 - gear.res/2, gear.basis.getPosition().y*2 - gear.res/2,
-        //        gear.res/2,gear.res/2, gear.res,gear.res, 3f,3f, gear.box.getAngle()* MathUtils.radiansToDegrees, 0,0, 500,500, false,false);
         JG.batch.draw(texturePause,
                 buttonPause.body.getPosition().x- buttonPause.r,
                 buttonPause.body.getPosition().y- buttonPause.r,
                 0, buttonPause.r*2, buttonPause.r*2, buttonPause.r*2,
                 1,1,0,0,0,100,100,false,false);
-        JG.batch.draw(tWatermelon,
+        JG.batch.draw(textureWatermelon,
                ellipse.ovalBody.getPosition().x- 0.4f,
              ellipse.ovalBody.getPosition().y- 0.3f,
              0.4f, 0.3f, 0.4f*2, 0.3f*2,
             1,1,ellipse.ovalBody.getAngle()* MathUtils.radiansToDegrees,0,0,150,120,false,false);
+
+        JG.batch.draw(textureButtonLeft,
+                ballLeft.body.getPosition().x- ballLeft.r,
+                ballLeft.body.getPosition().y- ballLeft.r,
+                0, ballLeft.r*2, ballLeft.r*2, ballLeft.r*2,
+                1,1,0,0,0,100,100,false,false);
+        JG.batch.draw(textureButtonRight,
+                ballRight.body.getPosition().x- ballRight.r,
+                ballRight.body.getPosition().y- ballRight.r,
+                0, ballRight.r*2, ballRight.r*2, ballRight.r*2,
+                1,1,0,0,0,100,100,false,false);
+        JG.batch.draw(textureButtonUp,
+                ballUp.body.getPosition().x- ballUp.r,
+                ballUp.body.getPosition().y- ballUp.r,
+                0, ballUp.r*2, ballUp.r*2, ballUp.r*2,
+                1,1,0,0,0,100,100,false,false);
         JG.batch.end();
 
     }

@@ -8,7 +8,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
 public class Triangle {
-    Body body;
+    public Body body;
 
     public Triangle(World world, float x, float y, float[] vertices){
         // Create our body definition
@@ -19,12 +19,8 @@ public class Triangle {
 
         // Создаем форму треугольника
         PolygonShape triangle = new PolygonShape();
-        /*float[] vertices = new float[] {
-                0.5f, 1,         // координаты вершин треугольника
-                1, 0,
-                0, 0
-        };*/
         triangle.set(vertices);
+
         // Создаем фикстуру для тела
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = triangle;
