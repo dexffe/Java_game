@@ -74,9 +74,9 @@ public class level1 implements Screen{
         }
 
 
-        ballLeft = new Ball(world, 1f, 0.75f, 0.5f, false);
-        ballRight = new Ball(world, 2.5f, 0.75f, 0.5f, false);
-        ballUp = new Ball(world, 14.5f, 0.75f, 0.5f, false);
+        ballLeft = new Ball(world, 1f, 0.75f, 0.6f, false);
+        ballRight = new Ball(world, 2.5f, 0.75f, 0.6f, false);
+        ballUp = new Ball(world, 14.5f, 0.75f, 0.6f, false);
 
         buttonPause = new Ball(world, 15.5f, 8.5f, 0.3f, false);
 
