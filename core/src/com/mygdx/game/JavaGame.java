@@ -37,7 +37,6 @@ public class JavaGame extends Game {
 		camera = new OrthographicCamera();
 		touch = new Vector3();
 
-		//camera.setToOrtho(false, width, height);
 		debugRenderer2 = new Box2DDebugRenderer();
 		debugRenderer = new Box2DDebugRenderer();
 

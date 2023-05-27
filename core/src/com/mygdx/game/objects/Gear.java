@@ -12,8 +12,6 @@ import com.badlogic.gdx.physics.box2d.joints.WeldJointDef;
 
 public class Gear {
     public Body basis;
-
-    // 4 зубца
     public Body box;
     Body topTooth;
     Body rightTooth;

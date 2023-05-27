@@ -12,10 +12,6 @@ import com.mygdx.game.JavaGame;
 public class Ellipse {
     public Body ovalBody;
    public float radiusX,radiusY;
-    JavaGame JG;
-
-    Vector2[] vertices;
-    public float r;
     public Ellipse(World world, float x, float y, boolean dynamic){
         BodyDef ovalBodyDef = new BodyDef();
         ovalBodyDef.type = BodyDef.BodyType.DynamicBody;
@@ -46,7 +42,6 @@ public class Ellipse {
             ovalBody.setUserData("Ellipse");
         }
 
-        //sector.dispose();
     }
     public void drw(){
 

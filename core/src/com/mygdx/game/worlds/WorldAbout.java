@@ -17,10 +17,7 @@ public class WorldAbout implements Screen {
     float w = 16, h = 9;
     Texture texture, textureBall, textureRender;
     World world;
-    OrthographicCamera camera;
-    SpriteBatch batch;
     Ball ball, ballRender;
-    Vector3 touch;
 
     public WorldAbout(JavaGame context) {
         JG = context;

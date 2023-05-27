@@ -18,7 +18,6 @@ public class Box {
         width = vertices[0]-vertices[6];
         PolygonShape shape = new PolygonShape();
         shape.set(vertices);
-        //shape.setAsBox();
 
         bodyDef = new BodyDef();
         bodyDef.angle = angle;

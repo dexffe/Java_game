@@ -46,7 +46,6 @@ public class WorldMenu implements Screen {
     SpriteBatch batch;
     Vector3 touch;
     World world;
-    TextButton btnPlay, btnSettings, btnExit;
     public Map<Texture, Ball> ListTextureBall = new HashMap<Texture, Ball>();
     public Map<Texture, Box> ListTextureBoxLeft = new HashMap<Texture, Box>();
     public Map<Texture, Box> ListTextureBoxRight = new HashMap<Texture, Box>();
@@ -74,7 +73,7 @@ public class WorldMenu implements Screen {
     public Box boxExitDown, boxExitRight, boxExitLeft;
     Texture textureBoxExitDown, textureBoxExitRight, textureBoxExitLeft, textureBoxStart;
 
-    SensorBox impulseBox, destroyBox;
+    SensorBox impulseBox;
     float x;
     float speed;
     boolean goScreen, isObjDeleted;
@@ -344,7 +343,6 @@ public class WorldMenu implements Screen {
         ScreenUtils.clear(0,0,0,1);
         world.step(1/60f,6,2);
         JG.camera.update();
-        //JG.debugRenderer2.render(world,JG.camera.combined);
         if (JG.renderOn) JG.debugRenderer.render(world,JG.camera.combined);
 
         if (goScreen){
@@ -472,7 +470,6 @@ public class WorldMenu implements Screen {
                 fromScreen = "Intro";
                 toScreen = "Settings";
                 goScreen = true;
-                //JG.camera.position.set(w/6, h/2, 0);
             }
             if (buttonAboutInIntro.hit(touch.x, touch.y)) {
                 if (onSound){
@@ -488,7 +485,6 @@ public class WorldMenu implements Screen {
                 fromScreen = "Intro";
                 toScreen = "Level";
                 goScreen = true;
-                //JG.camera.position.set(w/1.2f, h/2, 0);
             }
 
             if (ballBack.hit(touch.x, touch.y)) {
@@ -500,7 +496,6 @@ public class WorldMenu implements Screen {
                 fromScreen = "Settings";
                 toScreen = "Intro";
                 goScreen = true;
-                //JG.camera.position.set(w/2, h/2, 0);
             }
             if (buttonLevel1InLevel.hit(touch.x, touch.y)) {
                 if (onSound){
@@ -528,7 +523,6 @@ public class WorldMenu implements Screen {
                 fromScreen = "Level";
                 toScreen = "Intro";
                 goScreen = true;
-                //JG.camera.position.set(w/2, h/2, 0);
             }
             if (ballMusic.hit(touch.x, touch.y)) {
                 if (onSound){

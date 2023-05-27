@@ -12,10 +12,8 @@ public class Arc {
 
     public Body body;
     BodyDef groundBodyDef;
-    public float r;
 
     ChainShape chainShape;
-    Vector2[] vertices;
     public Arc(World world, float x, float y, int segments, float startAngle, float endAngle, float radius){
 
         groundBodyDef = new BodyDef();
