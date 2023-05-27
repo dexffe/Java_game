@@ -36,13 +36,10 @@ public class level2 implements Screen{
 
     Texture texturePause, tGearsBody;
     Texture textureWatermelon, textureButtonRight, textureButtonLeft, textureButtonUp;
-    Sprite sprite;
-    SpriteBatch batch;
-    TextButton btnPlay, btnSettings, btnExit;
 
+    Texture tBg;
     World world;
 
-    Triangle triangle;
     Wall floor;
     Ball ball, buttonPause, ballLeft, ballRight, ballUp;
     Gear gear;
@@ -60,7 +57,7 @@ public class level2 implements Screen{
         textureButtonRight = new Texture(Gdx.files.internal("arrowRight.png"));
         textureButtonLeft = new Texture(Gdx.files.internal("arrowLeft.png"));
         textureButtonUp = new Texture(Gdx.files.internal("arrowUp.png"));
-
+        tBg = new Texture("bg.png");
 
         floor = new Wall(world, width/2, height, 16, 0f);
         floor = new Wall(world, width/2, 0, 16, 0f);
@@ -73,17 +70,7 @@ public class level2 implements Screen{
         box = new Box(world, new float[]{6.5f, 3f, 8.5f, 3f, 8.5f, 3.5f, 6.5f, 3.5f}, false, 0, 0, 0);
         box = new Box(world, new float[]{14, 1.5f, 16, 1.5f, 13, 5.5f, 16, 5.5f}, false, 0, 0, 0);
 
-        //gear = new Gear(world, 0, 7.5f, 4, true, 0.3f, -10, 50 , 50);
-
-
-
-
         gear = new Gear(world, 0, 7.5f, 4, true, 0.3f, -10, 50 , 50);
-
-
-
-
-
 
         ballLeft = new Ball(world, 1f, 0.75f, 0.4f, false);
         ballRight = new Ball(world, 2.5f, 0.75f, 0.4f, false);
@@ -180,6 +167,7 @@ public class level2 implements Screen{
         // Отрисовываем спрайт
         JG.batch.setProjectionMatrix(JG.camera.combined);
         JG.batch.begin();
+        JG.batch.draw(tBg, 0,0 );
         JG.batch.draw(texturePause,
                 buttonPause.body.getPosition().x- buttonPause.r,
                 buttonPause.body.getPosition().y- buttonPause.r,

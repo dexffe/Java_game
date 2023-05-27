@@ -37,11 +37,7 @@ public class level3 implements Screen{
 
     Texture texturePause, tGearsBody, textureTriangle;
     Texture textureWatermelon, textureButtonRight, textureButtonLeft, textureButtonUp;
-
-    Sprite sprite;
-    SpriteBatch batch;
-    TextButton btnPlay, btnSettings, btnExit;
-
+    Texture tBg;
     World world;
 
     Triangle[] triangle = new Triangle[14];
@@ -64,6 +60,7 @@ public class level3 implements Screen{
         textureButtonLeft = new Texture(Gdx.files.internal("arrowLeft.png"));
         textureButtonUp = new Texture(Gdx.files.internal("arrowUp.png"));
 
+        tBg = new Texture("bg.png");
         floor = new Wall(world, width/2, height, 16, 0f);
         floor = new Wall(world, width/2, 0, 16, 0f);
         floor = new Wall(world, 0, height/2, 0, 9);
@@ -185,6 +182,7 @@ public class level3 implements Screen{
         // Отрисовываем спрайт
         JG.batch.setProjectionMatrix(JG.camera.combined);
         JG.batch.begin();
+        JG.batch.draw(tBg, 0,0);
         JG.batch.draw(tGearsBody, gear.basis.getPosition().x*2 - gear.res/2, gear.basis.getPosition().y*2 - gear.res/2,
                 gear.res/2,gear.res/2, gear.res,gear.res, 3f,3f, gear.box.getAngle()* MathUtils.radiansToDegrees, 0,0, 500,500, false,false);
         JG.batch.draw(tGearsBody, gear1.basis.getPosition().x*2 - gear1.res/2, gear1.basis.getPosition().y*2 - gear1.res/2,
