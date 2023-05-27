@@ -41,9 +41,8 @@ public class level2 implements Screen{
     World world;
 
     Wall floor;
-    Ball ball, buttonPause, ballLeft, ballRight, ballUp;
+    Ball buttonPause, ballLeft, ballRight, ballUp;
     Gear gear;
-    Swing swing;
     Box box;
     Ellipse ellipse;
     SensorBox sensorDead;
@@ -83,7 +82,6 @@ public class level2 implements Screen{
     @Override
     public void show() {
         JG.camera.setToOrtho(false, width, height);
-        //JG.camera.position.set(width, height/2, 0);
         ellipse = new Ellipse(world, 1.5f, 3, true);
         textureWatermelon = new Texture("watermelon.png");
         sensorDead = new SensorBox(world, 8, 2f, 5f, 0.5f, ellipse.ovalBody, "Dead");
@@ -116,13 +114,11 @@ public class level2 implements Screen{
             @Override
             public void endContact(Contact contact) {
                 isContact = false;
-                System.out.println("endContact");
             }
 
             @Override
             public void preSolve(Contact contact, Manifold oldManifold) {
                 isContact = true;
-                System.out.println("preSolve");
             }
 
             @Override
@@ -139,7 +135,6 @@ public class level2 implements Screen{
             JG.touch.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             JG.camera.unproject(JG.touch);
             if (buttonPause.hit(JG.touch.x, JG.touch.y)) {
-                //pause();
                 JG.setScreen(JG.worldMenu);
             }
         }
@@ -160,7 +155,6 @@ public class level2 implements Screen{
         }
         ScreenUtils.clear(0,0,0,1);
         if (!pause)world.step(1/60f,6,2);
-        //JG.camera.update();
         JG.debugRenderer.render(world,JG.camera.combined);
 
 

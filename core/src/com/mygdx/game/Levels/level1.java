@@ -126,13 +126,11 @@ public class level1 implements Screen{
             @Override
             public void endContact(Contact contact) {
                 isContact = false;
-                //System.out.println("endContact");
             }
 
             @Override
             public void preSolve(Contact contact, Manifold oldManifold) {
                 isContact = true;
-                //System.out.println("preSolve");
             }
 
             @Override
@@ -204,7 +202,6 @@ public class level1 implements Screen{
         }
         ScreenUtils.clear(0,0,0,1);
         if (!pause)world.step(1/60f,6,2);
-        //JG.camera.update();
         if (JG.renderOn) JG.debugRenderer.render(world,JG.camera.combined);
         // Отрисовываем спрайт
         JG.batch.setProjectionMatrix(JG.camera.combined);
@@ -293,12 +290,6 @@ public class level1 implements Screen{
                     0,0, 8, 4f, 1,1,
                     0,
                     0,0, 800,400, false,false);
-            //JG.batch.draw(texturePauseBackground,
-            //        boxPauseBackground.getX()-4,
-            //        boxPauseBackground.getY()-2,
-            //        0,0, 8, 2.5f, 1,1,
-            //        0,
-            //        0,0, 800,150, false,false);
             JG.batch.draw(texturePauseBallMenu,
                     ballPauseMenu.body.getPosition().x- ballPauseMenu.r,
                     ballPauseMenu.body.getPosition().y- ballPauseMenu.r,
@@ -364,7 +355,6 @@ public class level1 implements Screen{
         tPlay = new Texture(Gdx.files.internal("start.png"));
     }
     void spawnMenu(){
-        //texturePauseBackground = new Texture(Gdx.files.internal("block.png"));
         texturePauseCause = new Texture(Gdx.files.internal(String.valueOf(tCause)));
         texturePauseBallPlay = new Texture(Gdx.files.internal(String.valueOf(tPlay)));
         texturePauseBallMenu = new Texture(Gdx.files.internal("mapMenung.png"));

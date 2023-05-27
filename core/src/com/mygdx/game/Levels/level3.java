@@ -42,9 +42,8 @@ public class level3 implements Screen{
 
     Triangle[] triangle = new Triangle[14];
     Wall floor;
-    Ball ball, buttonPause, ballLeft, ballRight, ballUp;
+    Ball buttonPause, ballLeft, ballRight, ballUp;
     Gear gear, gear1;
-    Swing swing;
     Box box;
     SensorBox sensorDead;
     Ellipse ellipse;
@@ -101,7 +100,6 @@ public class level3 implements Screen{
     @Override
     public void show() {
         JG.camera.setToOrtho(false, width, height);
-        //JG.camera.position.set(width, height/2, 0);
         textureWatermelon = new Texture("watermelon.png");
         sensorDead = new SensorBox(world, 8, 8.5f, 8f, 0.5f, ellipse.ovalBody, "Dead");
 
@@ -169,13 +167,11 @@ public class level3 implements Screen{
             JG.touch.set(Gdx.input.getX(), Gdx.input.getY(), 0);
             JG.camera.unproject(JG.touch);
             if (buttonPause.hit(JG.touch.x, JG.touch.y)) {
-                //pause();
                 JG.setScreen(JG.worldMenu);
             }
         }
         ScreenUtils.clear(0,0,0,1);
         if (!pause)world.step(1/60f,6,2);
-        //JG.camera.update();
         JG.debugRenderer.render(world,JG.camera.combined);
 
 

@@ -41,10 +41,5 @@ public class Ellipse {
             ovalBody.createFixture(fixtureDef);
             ovalBody.setUserData("Ellipse");
         }
-
     }
-    public void drw(){
-
-    }
-
 }

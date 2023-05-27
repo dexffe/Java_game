@@ -40,10 +40,6 @@ public class WorldMenu implements Screen {
     Texture textureLevelInIntro, textureSettingsInIntro, textureAboutInIntro;
     Texture textureIntroInLevel, textureLevel1InLevel, textureLevel2InLevel, textureLevel3InLevel;
 
-    Box2DDebugRenderer debugRenderer;
-    OrthographicCamera camera;
-    Sprite sprite;
-    SpriteBatch batch;
     Vector3 touch;
     World world;
     public Map<Texture, Ball> ListTextureBall = new HashMap<Texture, Ball>();
@@ -51,7 +47,6 @@ public class WorldMenu implements Screen {
     public Map<Texture, Box> ListTextureBoxRight = new HashMap<Texture, Box>();
     public Map<Texture, Box> ListTextureBoxDown = new HashMap<Texture, Box>();
 
-    Triangle triangle;
     Wall floor;
     public Ball ball1, ball2, ball3;
     public Ball ballBack, ballExit, ballMusic, ballSound;
@@ -61,7 +56,6 @@ public class WorldMenu implements Screen {
     public Ball buttonIntroInLevel, buttonLevel1InLevel, buttonLevel2InLevel, buttonLevel3InLevel;
     Gear[] gear = new Gear[15];
     Gear[] gear1 = new Gear[12];
-    Swing swing;
     Arc arc;
     public Box boxDown, boxRight, boxLeft;
     public Box boxMusicDown, boxMusicRight, boxMusicLeft;
@@ -227,10 +221,8 @@ public class WorldMenu implements Screen {
         rjd1.localAnchorB.set(0, 0.25f);
         world.createJoint(rjd1);
 
-        float r = 0;
         for (int i = 1; i < 16; i++) {
-            //r += 0.25f;
-            gear[i-1] = new Gear(world, 0, i+x+r, 6, true, 0.3f, -3, 50 , 50); //speed -3
+            gear[i-1] = new Gear(world, 0, i+x, 6, true, 0.3f, -3, 50 , 50);
         }
         ListTextureBall.put(textureLevelInIntro, buttonLevelInIntro);
         ListTextureBall.put(textureSettingsInIntro, buttonSettingsInIntro);
@@ -245,16 +237,14 @@ public class WorldMenu implements Screen {
         floor = new Wall(world, 8+x, 0, 16, 0f);
         floor = new Wall(world, 8+x, 9, 16, 0f);
         floor = new Wall(world, 16+x, 4.5f, 0f, 9);
-        //impulseBox = new SensorBox(world, 12+x, 5.5f, 2.5f, 0.5f, ball1.body, "Right");
         buttonIntroInLevel = new Ball(world, 15+x, 0.8f, 0.5f, false);
         buttonLevel1InLevel = new Ball(world, 3+x, 2, 0.8f, false);
         buttonLevel2InLevel = new Ball(world, 7+x, 3, 0.8f, false);
         buttonLevel3InLevel = new Ball(world, 10+x, 5, 0.8f, false);
-        float h = 6f, r1 = 0;
+        float h = 6f;
         float count = 0;
         for (int i = 0; i < 12; i++) {
-            //r1 += 0.25f;
-            gear1[i] = new Gear(world, 0, i+x+r1, h, true, 0.3f, -3, 35 , 50);
+            gear1[i] = new Gear(world, 0, i+x, h, true, 0.3f, -3, 35 , 50);
             if (h != 7f && count >= 4 && count <= 8) h += 0.2f;
             count += 1;
             }
@@ -285,11 +275,8 @@ public class WorldMenu implements Screen {
             world.destroyBody(boxDown.body);
             world.destroyBody(boxRight.body);
             world.destroyBody(boxLeft.body);
-            //box1 = new Box(world, new float[]{0.8f+x-0.5f, 7.5f, 0.8f+x-0.5f, 7f, 3.8f+x-0.5f, 7f, 3.8f+x-0.5f, 7.5f}, true);
             boxDown = new Box(world, new float[]{-1.5f, 0.25f, -1.5f, -0.25f, 1.5f, -0.25f, 1.5f, 0.25f}, true, 180.25f, 6.75f, 0);
-            //box2 = new Box(world, new float[]{0.8f+x-0.5f, 8f, 0.8f+x-0.5f, 7f, 0.8f+x, 7f, 0.8f+x, 8f}, true);
             boxRight = new Box(world, new float[]{-0.25f, 1f, -0.25f, 0, 0.25f, 0, 0.25f, 1}, true, 170f, 6.5f, 0);
-            //box3 = new Box(world, new float[]{3.3f+x-0.5f, 8f, 3.3f+x-0.5f, 7f, 3.3f+x, 7f, 3.3f+x, 8f}, true);
             boxLeft = new Box(world, new float[]{-0.25f, 1f, -0.25f, 0, 0.25f, 0, 0.25f, 1}, true, 190.5f, 6.5f, 0);
 
             WeldJointDef rjd = new WeldJointDef();
@@ -314,11 +301,8 @@ public class WorldMenu implements Screen {
             isObjDeleted = false;
             timeLastCreateBox = TimeUtils.millis();
             x = 16;
-            //box1 = new Box(world, new float[]{0.8f+x-0.5f, 7.5f, 0.8f+x-0.5f, 7f, 3.8f+x-0.5f, 7f, 3.8f+x-0.5f, 7.5f}, true);
             boxDown = new Box(world, new float[]{-1.5f, 0.25f, -1.5f, -0.25f, 1.5f, -0.25f, 1.5f, 0.25f}, true, 18.25f, 6.75f, 0);
-            //box2 = new Box(world, new float[]{0.8f+x-0.5f, 8f, 0.8f+x-0.5f, 7f, 0.8f+x, 7f, 0.8f+x, 8f}, true);
             boxRight = new Box(world, new float[]{-0.25f, 1f, -0.25f, 0, 0.25f, 0, 0.25f, 1}, true, 17f, 6.5f, 0);
-            //box3 = new Box(world, new float[]{3.3f+x-0.5f, 8f, 3.3f+x-0.5f, 7f, 3.3f+x, 7f, 3.3f+x, 8f}, true);
             boxLeft = new Box(world, new float[]{-0.25f, 1f, -0.25f, 0, 0.25f, 0, 0.25f, 1}, true, 19.5f, 6.5f, 0);
 
             WeldJointDef rjd = new WeldJointDef();
